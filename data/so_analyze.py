@@ -1,9 +1,13 @@
 import argparse
 
 import pandas as pd
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+
 parser = argparse.ArgumentParser()
-parser.add_argument("--input", "-i", default="./data/so_python_10000.csv", type=str, help="Path to the csv file")
+parser.add_argument("--input", "-i",
+                    default="./data/so_python_10000.csv",
+                    type=str,
+                    help="Path to the csv file")
 
 
 # Count the number of questions which have accepted answers
@@ -11,6 +15,7 @@ def count_accepted_answers(df):
     df = df.drop_duplicates('q_id')
     count = sum(df["q_accepted_answer_id"].notna())
     print(f"Number of questions w/ accepted answers: {count} / {len(df)}")
+
 
 # Plot the histogram of answer count for questions
 def hist_answer_count(df):
@@ -24,9 +29,10 @@ def hist_answer_count(df):
     plt.ylabel("Count of different Answers")
     plt.savefig("data/plots/so_hist_count_answers_to_questions.png")
 
+
 # Count the number of answers with code sample
 def count_answers_w_code(df):
-    count =  sum(["<code>" in answer for answer in df["a_body"]])
+    count = sum(["<code>" in answer for answer in df["a_body"]])
     print(f"Number of answers w/ code: {count} / {len(df)}")
 
 
@@ -36,6 +42,7 @@ def main():
     count_accepted_answers(df)
     count_answers_w_code(df)
     hist_answer_count(df)
+
 
 if __name__ == "__main__":
     main()
