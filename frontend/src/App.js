@@ -20,6 +20,12 @@ class App extends Component {
     this.setState({ textInputFocused: true })
   }
 
+  onSubmit = (e) => {
+    fetch('/search?search=a')
+      .then(response => response.json())
+      .then(data => console.log(data));
+  }
+
   render() {
     let borderStyle = this.state.textInputFocused ? { border: "2px solid var(--green)" } : {}
     return (
@@ -37,7 +43,7 @@ class App extends Component {
           </div>
           <textarea className={styles.codeInput} />
           <div className={styles.buttonContainer}>
-            <input type="Submit" className={styles.button} value="Submit" />
+            <input type="Submit" className={styles.button} value="Submit" onClick={this.onSubmit} />
             <div className={styles.buttonShadow} />
           </div>
         </div>
