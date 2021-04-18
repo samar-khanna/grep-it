@@ -1,4 +1,7 @@
 import re
+import ast
+import json
+import numpy as np
 import pandas as pd
 from bs4 import BeautifulSoup
 from tokenizers import Tokenizer
@@ -6,6 +9,8 @@ from tokenizers.models import BPE
 from tokenizers.trainers import BpeTrainer
 from tokenizers.normalizers import BertNormalizer
 from tokenizers.pre_tokenizers import ByteLevel
+
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 def get_language_from_text(text):
@@ -59,7 +64,33 @@ def add_language_tokens(data_frame, tokenizer_file=None):
     return data_frame
 
 
+def create_tfidf(df):
+    print("Preprocessing cosine data....")
+    # qa_code_tokens = df['a_code_tokens']
+    qa_tokens = pd.concat([df['q_body_tokens'], df['a_body_tokens']], axis=1)
+
+    # TODO: Refactor this by saving tokens in correct format
+    def tokenize(inp):
+        return ' '.join(inp)
+        # return ' '.join(ast.literal_eval(inp_str))
+
+    qa_tokens = qa_tokens.applymap(tokenize)
+    qa_tokens = qa_tokens['q_body_tokens'] + ' ' + \
+                qa_tokens['a_body_tokens']
+
+    qa_vectorizer = TfidfVectorizer(analyzer=str.split)
+    qa_tfidf = qa_vectorizer.fit_transform(qa_tokens)
+
+    return qa_vectorizer
+
+
 if __name__ == "__main__":
-    df = pd.read_csv('data/so_rust_code.csv')
+    df = pd.read_csv('data/so_rust.csv')
     new_df = add_language_tokens(df)
-    new_df.to_csv('data/so_rust_lang_code.csv')
+    # new_df.to_csv('data/so_rust_lang_code.csv')
+
+    qa_body_vectorizer = create_tfidf(new_df)
+    with open('data/rust_qa_body_vectorizer_vocab.json', 'w') as f:
+        json.dump(qa_body_vectorizer.vocabulary_, f)
+
+    np.save('data/rust_qa_body_vectorizer_idf.npy', qa_body_vectorizer.idf_)

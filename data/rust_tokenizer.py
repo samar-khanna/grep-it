@@ -1,4 +1,7 @@
 import re
+import ast
+import json
+import numpy as np
 import pandas as pd
 from tokenizers import Tokenizer, Regex
 from tokenizers.models import BPE
@@ -6,6 +9,8 @@ from tokenizers.trainers import BpeTrainer
 from tokenizers.normalizers import Replace
 import tokenizers.pre_tokenizers as pre_tokenizers
 from tokenizers.pre_tokenizers import Punctuation, Whitespace
+
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 def get_code_from_text(text):
@@ -66,7 +71,33 @@ def add_code_tokens(data_frame, tokenizer_file=None):
     return data_frame
 
 
+def create_tfidf(df):
+    print("Preprocessing cosine data....")
+    # qa_code_tokens = df['a_code_tokens']
+    qa_code_tokens = pd.concat([df['q_code_tokens'], df['a_code_tokens']], axis=1)
+
+    # TODO: Refactor this by saving tokens in correct format
+    def tokenize(inp):
+        return ' '.join(inp)
+        # return ' '.join(ast.literal_eval(inp_str))
+
+    qa_code_tokens = qa_code_tokens.applymap(tokenize)
+    qa_code_tokens = qa_code_tokens['q_code_tokens'] + ' ' + \
+                     qa_code_tokens['a_code_tokens']
+
+    qa_code_vectorizer = TfidfVectorizer(analyzer=str.split)
+    qa_tfidf = qa_code_vectorizer.fit_transform(qa_code_tokens)
+
+    return qa_code_vectorizer
+
+
 if __name__ == "__main__":
     df = pd.read_csv('data/so_rust.csv')
     new_df = add_code_tokens(df, 'data/rust-tokenizer.json')
-    new_df.to_csv('data/so_rust_code.csv')
+    # new_df.to_csv('data/so_rust_code.csv')
+
+    qa_code_vectorizer = create_tfidf(new_df)
+    with open('data/rust_qa_code_vectorizer_vocab.json', 'w') as f:
+        json.dump(qa_code_vectorizer.vocabulary_, f)
+
+    np.save('data/rust_qa_code_vectorizer_idf.npy', qa_code_vectorizer.idf_)
