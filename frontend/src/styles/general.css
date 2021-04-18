@@ -4,6 +4,7 @@
 :root {
     --black: #141514;
     --green: #84CFA7;
+    --dark-green: #416652;
 }
 
 * {
@@ -32,14 +33,13 @@ body {
 }
 
 .bold {
-    font-family: "Tajawal", sans-serif;
-    font-weight: bold;
+    font-family: "Cabin", sans-serif;
+    font-weight: 700;
 }
 
 input[type="submit"] {
 	-webkit-appearance: none;
 }
-
 
 /* https://blog.maximerouiller.com/post/remove-the-x-from-internet-explorer-and-chrome-input-type-search/ */
 input[type=search]::-ms-clear {  display: none; width : 0; height: 0; }
