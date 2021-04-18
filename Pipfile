@@ -23,6 +23,7 @@ matplotlib = "*"
 beautifulsoup4 = "*"
 marshmallow = "*"
 marshmallow-enum = "*"
+tokenizers = "*"
 
 [dev-packages]
 
