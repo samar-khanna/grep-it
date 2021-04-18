@@ -31,7 +31,21 @@ class App extends Component {
   }
 
   onSubmit = () => {
-
+    fetch("https://grep-it.herokuapp.com/search_cosine", {
+      method: "GET",
+      mode: "no-cors"
+    })
+      .then(res => res.json())
+      .then(
+        (result) => {
+          console.log('No error')
+          console.log(result)
+        },
+        (error) => {
+          console.log('Error')
+          console.log(error)
+        }
+      )
   }
 
   render() {
