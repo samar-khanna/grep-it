@@ -1,9 +1,12 @@
+import os
 import re
 import ast
 import json
 import numpy as np
 import pandas as pd
+import scipy.sparse
 from bs4 import BeautifulSoup
+
 from tokenizers import Tokenizer
 from tokenizers.models import BPE
 from tokenizers.trainers import BpeTrainer
@@ -81,16 +84,20 @@ def create_tfidf(df):
     qa_vectorizer = TfidfVectorizer(analyzer=str.split)
     qa_tfidf = qa_vectorizer.fit_transform(qa_tokens)
 
-    return qa_vectorizer
+    return qa_vectorizer, qa_tfidf
 
 
 if __name__ == "__main__":
     df = pd.read_csv('data/so_rust.csv')
-    new_df = add_language_tokens(df)
+    new_df = add_language_tokens(df, 'data/language-tokenizer.json')
     # new_df.to_csv('data/so_rust_lang_code.csv')
 
-    qa_body_vectorizer = create_tfidf(new_df)
-    with open('data/rust_qa_body_vectorizer_vocab.json', 'w') as f:
+    os.makedirs('data/rust_qa_body', exist_ok=True)
+
+    qa_body_vectorizer, qa_tfidf = create_tfidf(new_df)
+    with open('data/rust_qa_body/vocab.json', 'w') as f:
         json.dump(qa_body_vectorizer.vocabulary_, f)
 
-    np.save('data/rust_qa_body_vectorizer_idf.npy', qa_body_vectorizer.idf_)
+    np.save('data/rust_qa_body/idf.npy', qa_body_vectorizer.idf_)
+
+    scipy.sparse.save_npz('data/rust_qa_body/tf_idf.npz', qa_tfidf)

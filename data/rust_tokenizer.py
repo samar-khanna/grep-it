@@ -1,8 +1,11 @@
+import os
 import re
 import ast
 import json
 import numpy as np
 import pandas as pd
+import scipy.sparse
+
 from tokenizers import Tokenizer, Regex
 from tokenizers.models import BPE
 from tokenizers.trainers import BpeTrainer
@@ -88,7 +91,7 @@ def create_tfidf(df):
     qa_code_vectorizer = TfidfVectorizer(analyzer=str.split)
     qa_tfidf = qa_code_vectorizer.fit_transform(qa_code_tokens)
 
-    return qa_code_vectorizer
+    return qa_code_vectorizer, qa_tfidf
 
 
 if __name__ == "__main__":
@@ -96,8 +99,12 @@ if __name__ == "__main__":
     new_df = add_code_tokens(df, 'data/rust-tokenizer.json')
     # new_df.to_csv('data/so_rust_code.csv')
 
-    qa_code_vectorizer = create_tfidf(new_df)
-    with open('data/rust_qa_code_vectorizer_vocab.json', 'w') as f:
+    os.makedirs('data/rust_qa_code', exist_ok=True)
+
+    qa_code_vectorizer, qa_tfidf = create_tfidf(new_df)
+    with open('data/rust_qa_code/vocab.json', 'w') as f:
         json.dump(qa_code_vectorizer.vocabulary_, f)
 
-    np.save('data/rust_qa_code_vectorizer_idf.npy', qa_code_vectorizer.idf_)
+    np.save('data/rust_qa_code/idf.npy', qa_code_vectorizer.idf_)
+
+    scipy.sparse.save_npz('data/rust_qa_code/tf_idf.npz', qa_tfidf)
