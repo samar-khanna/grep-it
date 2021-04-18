@@ -31,5 +31,5 @@ def cosine_search():
         query_confirmation = ''
     else:
         query_confirmation = "Your search: " + query
-        results = cosine_sim(query)  # top results from search.py
+        results = cosine_combined_search(query)  # top results from search.py
     return render_template('index.html', query_confirmation=query_confirmation, results=results)
