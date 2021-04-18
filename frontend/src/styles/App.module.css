@@ -1,0 +1,43 @@
+.container {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.centralCol {
+	height: 100%;
+	width: 50%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.title {
+	font-size: 34px;
+	font-family: "Monda", sans-serif;
+}
+
+.textInputContainer {
+	height: 32px;
+	width: 100%;
+
+	padding-top: 10px;
+	padding-bottom: 2px;
+	padding-left: 12px;
+
+    border: 2px solid var(--black);
+    border-radius: 4px;
+}
+
+.textInputContainer:hover {
+    border: 2px solid var(--green);
+}
+
+input[type="search"] {
+	border: none;
+	outline: none;
+    width: 100%;
+}
