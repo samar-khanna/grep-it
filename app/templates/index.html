@@ -1,0 +1,22 @@
+<!--for now if you want to see controller routing view <-> models-->
+<html>
+    <head>
+    </head>
+    <body>
+        <form class="form-inline global-search">         
+            <div class="form-group">
+                <input id="input" type="text" name="search" class="form-control" placeholder="Your Input">
+            </div>
+            <button type="submit" class="btn btn-info"> Go! </button>
+        </form>
+        <form class="form-inline global-search">
+        {% if results %}
+            <h1>{{query_confirmation}}</h1>
+            {% for d in results %}  
+                <br>
+                <p>{{d}}</p>
+            {% endfor %}
+        {% endif %}
+        </form>
+    </body>
+</html>
