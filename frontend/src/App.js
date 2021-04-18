@@ -25,7 +25,6 @@ class App extends Component {
     return (
       <div className={styles.container}>
         <div className={styles.centralCol}>
-          <div className={styles.logo}></div>
           <div className={styles.title}>Grep It</div>
           <div style={borderStyle} className={styles.textInputContainer}>
             <input
