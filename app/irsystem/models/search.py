@@ -1,8 +1,16 @@
 #put yo similarity functions HERE to run on query with dataset
-from data.so_analyze import *
+# from data.so_analyze import *
 import pandas as pd
 import numpy as np
 import re
+from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+# from init_cosine import *
+from .init_cosine import *
+
+'''
+========================= jaccard ====================================
+'''
 
 def jaccard_sim(query_lst, question_lst):
     inter = len(list(set(query_lst).intersection(question_lst)))
@@ -12,7 +20,7 @@ def jaccard_sim(query_lst, question_lst):
 def tokenize(str):
     return str.split()
 
-def test(query, dataset=[]):
+def jaccard_search(query, dataset=[]):
     df = pd.read_csv ('./data/so_rust.csv')
     #sample simple jaccard sim between query and questions in df
     q_df= df[['q_id', 'q_title']]
@@ -25,4 +33,34 @@ def test(query, dataset=[]):
     #print(df.iloc[max_index])
     return [df['q_title'][max_index], df['a_body'][max_index]] #returns [question, answer body] pair with highest score
 
+
+'''
+========================= cosine sim ====================================
+'''
+
+# run cosine sim on a user query
+# note: uses variables that were intially created in init_cosine.py
+def cosine_sim(query):
+    # process query
+    words = tfIdfVectorizer.get_feature_names() #returns words
+    queryTFIDF = TfidfVectorizer().fit(words)
+    queryTFIDF = queryTFIDF.transform([query])
+
+    #calculate cosine sim between docs and query
+    cosine_similarities = cosine_similarity(queryTFIDF, tfidf).flatten()
+    print("cosine", cosine_similarities)
+
+    # get top 10 related questions
+    related_product_indices = cosine_similarities.argsort()[:-11:-1].tolist()
+    for i in related_product_indices:
+        qid = idxToQid[i]
+        question = qidToQuestion[qid]
+        print("QID: ", qid, "|| Question: ", question)
+    
+    max_indx = 0
+    return [qid, question] #sends back the first result (most similar)
+
+
+# tfidf, tfIdfVectorizer, qidToQuestion, idxToQid = cosine_data()
+# cosine_sim("query")
 
