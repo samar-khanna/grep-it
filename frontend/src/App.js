@@ -8,16 +8,30 @@ class App extends Component {
     super(props)
 
     this.state = {
-      textInputFocused: false
+      textInputFocused: false,
+      textVal: "",
+      codeVal: "",
     }
   }
 
-  onTextInputBlur = (e) => {
+  onTextInputBlur = () => {
     this.setState({ textInputFocused: false })
   }
 
-  onTextInputFocus = (e) => {
+  onTextInputFocus = () => {
     this.setState({ textInputFocused: true })
+  }
+
+  onTextChange = (e) => {
+    this.setState({ textVal: e.target.value })
+  }
+
+  onCodeChange = (e) => {
+    this.setState({ codeVal: e.target.value })
+  }
+
+  onSubmit = () => {
+
   }
 
   render() {
@@ -32,12 +46,21 @@ class App extends Component {
               className={styles.textInput}
               onBlur={this.onTextInputBlur}
               onFocus={this.onTextInputFocus}
+              onChange={this.onTextChange}
               placeholder="How to add async..."
             />
           </div>
-          <textarea className={styles.codeInput} />
+          <textarea
+            className={styles.codeInput}
+            onChange={this.onCodeChange}
+          />
           <div className={styles.buttonContainer}>
-            <input type="Submit" className={styles.button} value="Submit" />
+            <input
+              type="Submit"
+              className={styles.button}
+              onClick={this.onSubmit}
+              value="Submit"
+            />
             <div className={styles.buttonShadow} />
           </div>
         </div>
