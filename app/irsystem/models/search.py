@@ -43,22 +43,56 @@ def jaccard_search(query, dataset=[]):
 '''
 
 
-# run cosine sim on a user query
-# note: uses variables that were intially created in init_cosine.py
-def cosine_sim(query):
-    # process query
+# TODO: Decide whether to use combined or separate
+def cosine_combined_search(query, query_code=None):
     query_tokens = language_tokenizer.encode(query).tokens
-    query_tfidf = a_vectorizer.transform([' '.join(query_tokens)])
+    if query_code is not None:
+        query_tokens += code_tokenizer.encode(query_code).tokens
+
+    query_tf_idf = combined_vectorizer.transform([' '.join(query_tokens)])
 
     # calculate cosine sim between docs and query
-    cosine_similarities = cosine_similarity(query_tfidf, a_tfidf).flatten()
-    print("cosine", cosine_similarities)
+    cosine_similarities = cosine_similarity(query_tf_idf, combined_tf_idf).flatten()
 
-    # get top 10 related questions
-    related_product_indices = cosine_similarities.argsort()[:-11:-1].tolist()
-    for i in related_product_indices:
-        qid = idx_to_qid[i]
-        question = qid_to_question[qid]
-        print("QID: ", qid, "|| Question: ", question)
+    # Get top 10 relevant results
+    relevant_indices = (-cosine_similarities).argsort()[:11].tolist()
 
-    return [qid, question]  # sends back the first result (most similar)
+    result = df.iloc[relevant_indices]
+    return result
+
+
+def cosine_search(query, query_code=None):
+    query_tokens = language_tokenizer.encode(query).tokens
+    query_tf_idf = language_vectorizer.transform([' '.join(query_tokens)])
+    language_cosine_sim = cosine_similarity(query_tf_idf, language_tf_idf)
+
+    if query_code is not None:
+        query_code_tokens = code_tokenizer.encode(query_code).tokens
+        query_code_tf_idf = code_vectorizer.transform([' '.join(query_code_tokens)])
+        code_cosine_sim = cosine_similarity(query_code_tf_idf, code_tf_idf)
+
+    # TODO: Do something to combine the two (maybe interpolation?)
+
+    relevant_indices = []
+    return df.iloc[relevant_indices]
+
+
+# run cosine sim on a user query
+# note: uses variables that were intially created in init_cosine.py
+# def cosine_search(query):
+#     # process query
+#     query_tokens = language_tokenizer.encode(query).tokens
+#     query_tfidf = a_vectorizer.transform([' '.join(query_tokens)])
+#
+#     # calculate cosine sim between docs and query
+#     cosine_similarities = cosine_similarity(query_tfidf, a_tfidf).flatten()
+#     print("cosine", cosine_similarities)
+#
+#     # get top 10 related questions
+#     related_product_indices = cosine_similarities.argsort()[:-11:-1].tolist()
+#     for i in related_product_indices:
+#         qid = idx_to_qid[i]
+#         question = qid_to_question[qid]
+#         print("QID: ", qid, "|| Question: ", question)
+#
+#     return [qid, question]  # sends back the first result (most similar)
