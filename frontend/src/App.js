@@ -14,6 +14,7 @@ class App extends Component {
       code: "",
       results: undefined
     }
+    this.resultsContainer = React.createRef();
   }
 
   onTextInputBlur = (e) => {
@@ -49,16 +50,19 @@ class App extends Component {
       }
     )
       .then(response => response.json())
-      .then(results => { console.log(results); this.setState({ results: results }) });
+      .then(results => {
+        console.log(results);
+        this.setState({ results: results });
+        this.resultsContainer.current.scrollIntoView();
+      });
   }
 
   render() {
     let borderStyle = this.state.textInputFocused ? { border: "2px solid var(--green)" } : {}
     let results = []
-    console.log("Results", this.state.results)
-    if (this.state.results !== undefined)
+    if (this.state.results !== undefined) {
       results = this.state.results["result"].map(item => <Result {...item} />)
-    console.log("Results DIV", results)
+    }
     return (
       <div className={styles.container}>
         <div className={styles.centralCol}>
@@ -78,7 +82,7 @@ class App extends Component {
             <input type="Submit" className={styles.button} value="Submit" onClick={this.onSubmit} />
             <div className={styles.buttonShadow} />
           </div>
-          <div> {results} </div>
+          <div ref={this.resultsContainer}> {results} </div>
         </div>
       </div>
     );
