@@ -9,54 +9,45 @@ class App extends Component {
 
     this.state = {
       textInputFocused: false,
-      textVal: "",
-      codeVal: "",
+      text: "",
+      code: ""
     }
   }
 
-  onTextInputBlur = () => {
+  onTextInputBlur = (e) => {
     this.setState({ textInputFocused: false })
   }
 
-  onTextInputFocus = () => {
+  onTextInputFocus = (e) => {
     this.setState({ textInputFocused: true })
   }
 
   onTextChange = (e) => {
-    this.setState({ textVal: e.target.value })
+    this.setState({ text: e.target.value })
   }
 
   onCodeChange = (e) => {
-    this.setState({ codeVal: e.target.value })
+    this.setState({ code: e.target.value })
   }
 
-  onSubmit = () => {
-    let params = new URLSearchParams();
-    params.append("search", this.state.textVal);
-
-    console.log(`https://grep-it.herokuapp.com/search?${params.toString()}`)
-
-    const req = new Request(`https://grep-it.herokuapp.com/search?${params.toString()}`, {
-      method: "GET",
-      mode: "no-cors",
-      headers: { "Access-Control-Allow-Origin": "*" }
-    });
-
-    fetch(req)
-      .then(res => {
-        console.log(res)
-        return res.json()
-      })
-      .then(
-        (result) => {
-          console.log('No error')
-          console.log(result)
+  onSubmit = (e) => {
+    fetch('/search',
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
         },
-        (error) => {
-          console.log('Error')
-          console.log(error)
-        }
-      )
+        method: "POST",
+        body: JSON.stringify({
+          query: this.state.text,
+          query_code: this.state.code,
+          function: 'cosine',
+          input_type: 'both'
+        })
+      }
+    )
+      .then(response => response.json())
+      .then(data => console.log(data));
   }
 
   render() {
@@ -75,17 +66,9 @@ class App extends Component {
               placeholder="How to add async..."
             />
           </div>
-          <textarea
-            className={styles.codeInput}
-            onChange={this.onCodeChange}
-          />
+          <textarea className={styles.codeInput} onChange={this.onCodeChange} />
           <div className={styles.buttonContainer}>
-            <input
-              type="Submit"
-              className={styles.button}
-              onClick={this.onSubmit}
-              value="Submit"
-            />
+            <input type="Submit" className={styles.button} value="Submit" onClick={this.onSubmit} />
             <div className={styles.buttonShadow} />
           </div>
         </div>
