@@ -59,6 +59,16 @@ class App extends Component {
 
   render() {
     let borderStyle = this.state.textInputFocused ? { border: "2px solid var(--green)" } : {}
+    let rows
+    if (this.state.code === "") {
+      if (this.state.results === undefined) {
+        rows = 10;
+      } else {
+        rows = 2;
+      }
+    } else {
+      rows = null;
+    }
     let results = []
     if (this.state.results !== undefined) {
       results = this.state.results["result"].map(item => <Result {...item} />)
@@ -77,7 +87,11 @@ class App extends Component {
               placeholder="How to add async..."
             />
           </div>
-          <textarea className={styles.codeInput} onChange={this.onCodeChange} />
+          <textarea
+            className={styles.codeInput}
+            onChange={this.onCodeChange}
+            rows={rows}
+          />
           <div className={styles.buttonContainer}>
             <input type="Submit" className={styles.button} value="Submit" onClick={this.onSubmit} />
             <div className={styles.buttonShadow} />
