@@ -31,11 +31,22 @@ class App extends Component {
   }
 
   onSubmit = () => {
-    fetch("https://grep-it.herokuapp.com/search_cosine", {
+    let params = new URLSearchParams();
+    params.append("search", this.state.textVal);
+
+    console.log(`https://grep-it.herokuapp.com/search?${params.toString()}`)
+
+    const req = new Request(`https://grep-it.herokuapp.com/search?${params.toString()}`, {
       method: "GET",
-      mode: "no-cors"
-    })
-      .then(res => res.json())
+      mode: "no-cors",
+      headers: { "Access-Control-Allow-Origin": "*" }
+    });
+
+    fetch(req)
+      .then(res => {
+        console.log(res)
+        return res.json()
+      })
       .then(
         (result) => {
           console.log('No error')
