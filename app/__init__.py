@@ -12,6 +12,7 @@ app = Flask(__name__, static_folder='../frontend/build/static', template_folder=
 class InputType(Enum):
     text = 1
     code = 2
+    both = 3
 
 class SearchFunction(Enum):
     jaccard = 1
@@ -20,7 +21,8 @@ class SearchFunction(Enum):
 class SearchSchema(Schema):
     function = EnumField(SearchFunction)
     input_type = EnumField(InputType)
-    query = fields.String(required=True)
+    query = fields.String()
+    query_code = fields.String()
 
 @app.route("/")
 def index():
@@ -37,6 +39,7 @@ def df_to_list(df):
 @app.route('/search', methods=['POST'])
 def search():
     json = request.json
+    print(json)
     # Get Request body from JSON
     request_data = request.json
     schema = SearchSchema()
@@ -47,8 +50,18 @@ def search():
         # Return a nice message if validation fails
         return dumps(err.messages), 400
 
+    query, query_code = None, None
+    if request_data["input_type"] == "text":
+        query = request_data["query"] if len(request_data["query"]) > 0 else None
+    elif request_data["input_type"] == "code":
+        query_code = request_data["query_code"] if len(request_data["query_code"]) > 0 else None
+    else:
+        query = request_data["query"] if len(request_data["query"]) > 0 else None
+        query_code = request_data["query_code"] if len(request_data["query_code"]) > 0 else None
+
+    res = []
     if request_data["function"] == "cosine":
-        res = cosine_combined_search(request_data["query"])
+        res = cosine_combined_search(query, query_code=query_code)
     elif request_data["function"] == "jaccard":
         res = jaccard_search(request_data["query"])
 

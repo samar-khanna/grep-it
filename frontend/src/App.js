@@ -26,6 +26,10 @@ class App extends Component {
     this.setState({ text: e.target.value })
   }
 
+  onCodeChange = (e) => {
+    this.setState({ code: e.target.value })
+  }
+
   onSubmit = (e) => {
     fetch('/search',
       {
@@ -36,8 +40,9 @@ class App extends Component {
         method: "POST",
         body: JSON.stringify({
           query: this.state.text,
+          query_code: this.state.code,
           function: 'cosine',
-          input_type: 'text'
+          input_type: 'both'
         })
       }
     )
@@ -61,7 +66,7 @@ class App extends Component {
               placeholder="How to add async..."
             />
           </div>
-          <textarea className={styles.codeInput} />
+          <textarea className={styles.codeInput} onChange={this.onCodeChange} />
           <div className={styles.buttonContainer}>
             <input type="Submit" className={styles.button} value="Submit" onClick={this.onSubmit} />
             <div className={styles.buttonShadow} />
