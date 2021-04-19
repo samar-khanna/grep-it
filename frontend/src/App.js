@@ -51,7 +51,6 @@ class App extends Component {
     )
       .then(response => response.json())
       .then(results => {
-        console.log(results);
         this.setState({ results: results });
         this.resultsContainer.current.scrollIntoView();
       });
@@ -71,7 +70,7 @@ class App extends Component {
     }
     let results = []
     if (this.state.results !== undefined) {
-      results = this.state.results["result"].map(item => <Result {...item} />)
+      results = this.state.results["result"].map((item, index) => <Result key={index} {...item} />)
     }
     return (
       <div className={styles.container}>
