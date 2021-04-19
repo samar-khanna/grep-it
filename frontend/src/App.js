@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import './styles/general.css';
 import styles from './styles/App.module.css';
+import Result from './components/Result';
 
 class App extends Component {
   constructor(props) {
@@ -10,7 +11,8 @@ class App extends Component {
     this.state = {
       textInputFocused: false,
       text: "",
-      code: ""
+      code: "",
+      results: undefined
     }
   }
 
@@ -47,11 +49,16 @@ class App extends Component {
       }
     )
       .then(response => response.json())
-      .then(data => console.log(data));
+      .then(results => { console.log(results); this.setState({ results: results }) });
   }
 
   render() {
     let borderStyle = this.state.textInputFocused ? { border: "2px solid var(--green)" } : {}
+    let results = []
+    console.log("Results", this.state.results)
+    if (this.state.results !== undefined)
+      results = this.state.results["result"].map(item => <Result {...item} />)
+    console.log("Results DIV", results)
     return (
       <div className={styles.container}>
         <div className={styles.centralCol}>
@@ -71,6 +78,7 @@ class App extends Component {
             <input type="Submit" className={styles.button} value="Submit" onClick={this.onSubmit} />
             <div className={styles.buttonShadow} />
           </div>
+          <div> {results} </div>
         </div>
       </div>
     );

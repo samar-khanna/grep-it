@@ -32,7 +32,8 @@ def df_to_list(df):
     res = []
     for _, row in df.iterrows():
         res.append({
-            "url": f'https://stackoverflow.com/questions/{row["q_id"]}'
+            "url": f'https://stackoverflow.com/questions/{row["q_id"]}',
+            "title": row["q_title"]
         })
     return res
 

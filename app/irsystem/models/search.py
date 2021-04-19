@@ -55,7 +55,7 @@ def cosine_combined_search(query, query_code=None):
     cosine_similarities = cosine_similarity(query_tf_idf, combined_tf_idf).flatten()
 
     # Get top 10 relevant results
-    relevant_indices = (-cosine_similarities).argsort()[:11].tolist()
+    relevant_indices = (-cosine_similarities).argsort()[:10].tolist()
 
     result = df.iloc[relevant_indices]
     return result
