@@ -130,3 +130,7 @@ dmypy.json
 
 # PyCharm stuff
 .idea/
+
+# Frontend stuff
+frontend/node_modules/
+
