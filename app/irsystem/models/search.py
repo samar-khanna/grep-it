@@ -64,16 +64,22 @@ def cosine_combined_search(query, query_code=None):
 def cosine_search(query, query_code=None):
     query_tokens = language_tokenizer.encode(query).tokens
     query_tf_idf = language_vectorizer.transform([' '.join(query_tokens)])
-    language_cosine_sim = cosine_similarity(query_tf_idf, language_tf_idf)
+    #query_tf_idf = combined_vectorizer.transform([' '.join(query_tokens)])
+    language_cosine_sim = cosine_similarity(query_tf_idf, language_tf_idf).flatten()
+    #language_cosine_sim = cosine_similarity(query_tf_idf, combined_tf_idf).flatten()
 
     if query_code is not None:
         query_code_tokens = code_tokenizer.encode(query_code).tokens
         query_code_tf_idf = code_vectorizer.transform([' '.join(query_code_tokens)])
-        code_cosine_sim = cosine_similarity(query_code_tf_idf, code_tf_idf)
+        code_cosine_sim = cosine_similarity(query_code_tf_idf, code_tf_idf).flatten()
 
-    # TODO: Do something to combine the two (maybe interpolation?)
-
-    relevant_indices = []
+    #create 2D space with language and code similarites and score based on distance from the origin
+    #prioritizes a high language/code score over the same score between language and code
+        points = np.array([a**2 + b**2 for a, b in zip(language_cosine_sim,code_cosine_sim )])
+ 
+        relevant_indices = (-points).argsort()[:10].tolist()
+    else:
+        relevant_indices = (-language_cosine_sim).argsort()[:10].tolist()
     return df.iloc[relevant_indices]
 
 
