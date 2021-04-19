@@ -38,7 +38,8 @@ def df_to_list(df):
     res = []
     for _, row in df.iterrows():
         res.append({
-            "url": f'https://stackoverflow.com/questions/{row["q_id"]}'
+            "url": f'https://stackoverflow.com/questions/{row["q_id"]}',
+            "title": row["q_title"]
         })
     return res
 
@@ -68,7 +69,7 @@ def search():
 
     res = []
     if request_data["function"] == "cosine":
-        res = cosine_combined_search(query, query_code=query_code)
+        res = cosine_search(query, query_code=query_code)
     elif request_data["function"] == "jaccard":
         res = jaccard_search(request_data["query"])
 
