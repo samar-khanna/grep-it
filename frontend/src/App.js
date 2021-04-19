@@ -8,7 +8,9 @@ class App extends Component {
     super(props)
 
     this.state = {
-      textInputFocused: false
+      textInputFocused: false,
+      text: "",
+      code: ""
     }
   }
 
@@ -20,8 +22,30 @@ class App extends Component {
     this.setState({ textInputFocused: true })
   }
 
+  onTextChange = (e) => {
+    this.setState({ text: e.target.value })
+  }
+
+  onCodeChange = (e) => {
+    this.setState({ code: e.target.value })
+  }
+
   onSubmit = (e) => {
-    fetch('/search?search=a')
+    fetch('/search',
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({
+          query: this.state.text,
+          query_code: this.state.code,
+          function: 'cosine',
+          input_type: 'both'
+        })
+      }
+    )
       .then(response => response.json())
       .then(data => console.log(data));
   }
@@ -38,10 +62,11 @@ class App extends Component {
               className={styles.textInput}
               onBlur={this.onTextInputBlur}
               onFocus={this.onTextInputFocus}
+              onChange={this.onTextChange}
               placeholder="How to add async..."
             />
           </div>
-          <textarea className={styles.codeInput} />
+          <textarea className={styles.codeInput} onChange={this.onCodeChange} />
           <div className={styles.buttonContainer}>
             <input type="Submit" className={styles.button} value="Submit" onClick={this.onSubmit} />
             <div className={styles.buttonShadow} />

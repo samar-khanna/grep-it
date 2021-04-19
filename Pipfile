@@ -20,6 +20,10 @@ Werkzeug = "==1.0.1"
 google-cloud-bigquery = "*"
 pandas = "*"
 matplotlib = "*"
+beautifulsoup4 = "*"
+marshmallow = "*"
+marshmallow-enum = "*"
+tokenizers = "*"
 
 [dev-packages]
 
