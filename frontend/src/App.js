@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './styles/general.css';
 import styles from './styles/App.module.css';
 import Result from './components/Result';
+import queries from './constants/Queries';
 
 class App extends Component {
   constructor(props) {
@@ -56,6 +57,35 @@ class App extends Component {
       });
   }
 
+  onShuffle = (e) => {
+    var rand_idx = Math.floor((Math.random() * queries.length));
+    console.log(queries, rand_idx)
+    this.setState({
+      text: queries[rand_idx]["text"],
+      code: queries[rand_idx]["code"]
+    });
+    fetch('/search',
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({
+          query: queries[rand_idx]["text"],
+          query_code: queries[rand_idx]["code"],
+          function: 'cosine',
+          input_type: 'both'
+        })
+      }
+    )
+      .then(response => response.json())
+      .then(results => {
+        this.setState({ results: results });
+        this.resultsContainer.current.scrollIntoView();
+      });
+  }
+
   render() {
     let borderStyle = this.state.textInputFocused ? { border: "2px solid var(--green)" } : {}
     let rows
@@ -79,6 +109,7 @@ class App extends Component {
           <div style={borderStyle} className={styles.textInputContainer}>
             <input
               type="text"
+              value={this.state.text}
               className={styles.textInput}
               onBlur={this.onTextInputBlur}
               onFocus={this.onTextInputFocus}
@@ -87,6 +118,7 @@ class App extends Component {
             />
           </div>
           <textarea
+            value={this.state.code}
             className={styles.codeInput}
             onChange={this.onCodeChange}
             rows={rows}
@@ -94,6 +126,10 @@ class App extends Component {
           <div className={styles.buttonContainer}>
             <input type="Submit" className={styles.button} value="Submit" onClick={this.onSubmit} />
             <div className={styles.buttonShadow} />
+          </div>
+          <div className={styles.buttonContainer}>
+            <input type="Submit" className={styles.button} style={{ "background-color": "var(--blue)" }} value="Surprise Me !" onClick={this.onShuffle} />
+            <div className={styles.buttonShadow} style={{ "background-color": "var(--dark-blue)" }} />
           </div>
           <div ref={this.resultsContainer}> {results} </div>
         </div>
