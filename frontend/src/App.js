@@ -18,6 +18,7 @@ class App extends Component {
     this.resultsContainer = React.createRef();
     this.textareaRef = React.createRef();
     this.cursorPosition = 0;
+    this.query_idx = Math.floor((Math.random() * queries.length));
   }
 
   onTextInputBlur = (e) => {
@@ -60,10 +61,10 @@ class App extends Component {
   }
 
   onShuffle = (e) => {
-    var rand_idx = Math.floor((Math.random() * queries.length));
+    this.query_idx = (this.query_idx + 1) % queries.length;
     this.setState({
-      text: queries[rand_idx]["text"],
-      code: queries[rand_idx]["code"]
+      text: queries[this.query_idx]["text"],
+      code: queries[this.query_idx]["code"]
     });
     fetch('/search',
       {
@@ -73,8 +74,8 @@ class App extends Component {
         },
         method: "POST",
         body: JSON.stringify({
-          query: queries[rand_idx]["text"],
-          query_code: queries[rand_idx]["code"],
+          query: queries[this.query_idx]["text"],
+          query_code: queries[this.query_idx]["code"],
           function: 'cosine',
           input_type: 'both'
         })
