@@ -16,6 +16,8 @@ class App extends Component {
       results: undefined
     }
     this.resultsContainer = React.createRef();
+    this.textareaRef = React.createRef();
+    this.cursorPosition = 0;
   }
 
   onTextInputBlur = (e) => {
@@ -59,7 +61,6 @@ class App extends Component {
 
   onShuffle = (e) => {
     var rand_idx = Math.floor((Math.random() * queries.length));
-    console.log(queries, rand_idx)
     this.setState({
       text: queries[rand_idx]["text"],
       code: queries[rand_idx]["code"]
@@ -86,22 +87,35 @@ class App extends Component {
       });
   }
 
+  onKeyDown = (event) => {
+    if (event.keyCode === 9) { // tab was pressed
+      event.preventDefault();
+      var val = this.state.code,
+        start = event.target.selectionStart,
+        end = event.target.selectionEnd;
+      this.setState(
+        {
+          "code": val.substring(0, start) + '\t' + val.substring(end)
+        },
+        () => {
+          this.textareaRef.current.selectionStart = this.textareaRef.current.selectionEnd = start + 1
+        });
+    }
+  }
+
   render() {
     let borderStyle = this.state.textInputFocused ? { border: "2px solid var(--green)" } : {}
     let rows
-    if (this.state.code === "") {
-      if (this.state.results === undefined) {
-        rows = 10;
-      } else {
-        rows = 2;
-      }
+    if (this.state.results === undefined) {
+      rows = 10;
     } else {
-      rows = null;
+      rows = 4;
     }
     let results = []
     if (this.state.results !== undefined) {
       results = this.state.results["result"].map((item, index) => <Result key={index} {...item} />)
     }
+
     return (
       <div className={styles.container}>
         <div className={styles.centralCol}>
@@ -118,18 +132,20 @@ class App extends Component {
             />
           </div>
           <textarea
-            value={this.state.code}
+            ref={this.textareaRef}
             className={styles.codeInput}
             onChange={this.onCodeChange}
+            value={this.state.code}
             rows={rows}
+            onKeyDown={this.onKeyDown}
           />
           <div className={styles.buttonContainer}>
             <input type="Submit" className={styles.button} value="Submit" onClick={this.onSubmit} />
             <div className={styles.buttonShadow} />
           </div>
           <div className={styles.buttonContainer}>
-            <input type="Submit" className={styles.button} style={{ "background-color": "var(--blue)" }} value="Surprise Me !" onClick={this.onShuffle} />
-            <div className={styles.buttonShadow} style={{ "background-color": "var(--dark-blue)" }} />
+            <input type="Submit" className={styles.button} style={{ "backgroundColor": "var(--blue)" }} value="Surprise Me !" onClick={this.onShuffle} />
+            <div className={styles.buttonShadow} style={{ "backgroundColor": "var(--dark-blue)" }} />
           </div>
           <div ref={this.resultsContainer}> {results} </div>
         </div>

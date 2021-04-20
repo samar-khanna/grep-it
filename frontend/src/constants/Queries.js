@@ -19,5 +19,13 @@ var queries = [
         "text": "cannot ctrl-c the code",
         "code": ""
     },
+    {
+        "text": "Hello World in Rust",
+        "code": "println!(\"Hello World\")"
+    },
+    {
+        "text": "What is a rust compiler?",
+        "code": ""
+    }
 ]
 export default queries;
