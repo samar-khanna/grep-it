@@ -5,7 +5,19 @@ var queries = [
     },
     {
         "text": "How to use async method with tokio",
-        "code": "#async![tokio]\npub fn main {\n}"
-    }
+        "code": "#[tokio::main]\nasync fn main() {\n}"
+    },
+    {
+        "text": "public functions in traits for a struct",
+        "code": "impl Foo for Bar {}"
+    },
+    {
+        "text": "JSON deserialization and serialization of traits",
+        "code": ""
+    },
+    {
+        "text": "cannot ctrl-c the code",
+        "code": ""
+    },
 ]
 export default queries;
