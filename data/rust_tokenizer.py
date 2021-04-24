@@ -10,6 +10,8 @@ from tokenizers import Tokenizer, Regex
 from tokenizers.models import BPE
 from tokenizers.trainers import BpeTrainer
 from tokenizers.normalizers import Replace
+import tokenizers.normalizers as normalizers
+from tokenizers.normalizers import Lowercase
 import tokenizers.pre_tokenizers as pre_tokenizers
 from tokenizers.pre_tokenizers import Punctuation, Whitespace
 
@@ -26,15 +28,21 @@ def train_tokenizer(all_text, out_file='data/rust-tokenizer.json'):
     tokenizer = Tokenizer(BPE(unk_token="[UNK]"))
     trainer = BpeTrainer(special_tokens=["[UNK]", "[CLS]", "[SEP]", "[PAD]", "[MASK]"])
 
-    bracket_regexp = Regex(r'[{}();]')
-    bracket_normalizer = Replace(bracket_regexp, ' ')
-
+    syntax_regexp = Regex(r'[\[\]{}\(\);]|::|->')
     camel_case_regexp = Regex(r'(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])')
-    camel_case = pre_tokenizers.Split(camel_case_regexp, behavior='isolated')
+    common_keyword_regexp = Regex(r'let|const|fn|if|else|self|println')
+    normalizer = normalizers.Sequence([
+        Replace(syntax_regexp, ' '),  # removes unnecessary syntax
+        Replace(camel_case_regexp, ' '),
+        Lowercase(),
+        Replace(common_keyword_regexp, ' '),
+    ])
 
-    pre_tokenizer = pre_tokenizers.Sequence([camel_case, Punctuation(), Whitespace()])
+    # camel_case = pre_tokenizers.Split(camel_case_regexp, behavior='isolated')
 
-    tokenizer.normalizer = bracket_normalizer
+    pre_tokenizer = pre_tokenizers.Sequence([Punctuation(), Whitespace()])
+
+    tokenizer.normalizer = normalizer
     tokenizer.pre_tokenizer = pre_tokenizer
 
     tokenizer.train_from_iterator(all_text, trainer=trainer)
