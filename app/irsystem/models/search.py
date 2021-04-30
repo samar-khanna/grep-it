@@ -7,6 +7,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 # from init_cosine import *
 from .init_cosine import *
+from .init_skipgram_embedding import *
 
 '''
 ========================= jaccard ====================================
@@ -41,6 +42,22 @@ def jaccard_search(query, dataset=[]):
 '''
 ========================= cosine sim ====================================
 '''
+
+def gh_cosine_combined_embedding_search(query, query_code=None):
+    query_tokens = gh_rust_tokenizer.encode(query).tokens
+    if query_code is not None:
+        query_tokens += gh_rust_tokenizer.encode(query_code).tokens
+
+    query_vec = gh_rust_code_model.get_sentence_vector(' '.join(query_tokens))
+    query_vec = query_vec.reshape(1, -1)
+
+    cosine_similarities = cosine_similarity(query_vec, gh_code_vecs).flatten()
+
+    # Get top 10 relevant results
+    relevant_indices = (-cosine_similarities).argsort()[:10].tolist()
+
+    result = gh_code_metadata.iloc(relevant_indices)
+    return result
 
 
 # TODO: Decide whether to use combined or separate
