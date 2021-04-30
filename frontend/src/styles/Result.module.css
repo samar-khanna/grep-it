@@ -27,6 +27,7 @@
 }
 
 pre, code {
+	width: 100%;
 	background-color: white;
 	border-radius: 4px;
 }
@@ -43,8 +44,16 @@ pre {
 	overflow: scroll;
 }
 
+pre:last-child {
+	margin-bottom: 0;
+}
+
 p {
 	margin-bottom: 16px;
+}
+
+p:last-child {
+	margin-bottom: 0;
 }
 
 ul, ol {
