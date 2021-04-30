@@ -3,10 +3,13 @@
 
 :root {
     --black: #141514;
+    --light-grey: #E6E8E7;
+
     --light-green: #c3e9d4;
     --green: #84CFA7;
-    --blue: #68cfe9;
     --dark-green: #416652;
+
+    --blue: #68cfe9;
     --dark-blue: #284b79;
 }
 
