@@ -24,7 +24,6 @@ def tokenize(str):
 
 
 def jaccard_search(query, dataset=[]):
-    df = pd.read_csv('./data/so_rust.csv')
     # sample simple jaccard sim between query and questions in df
     q_df = df[['q_id', 'q_title']]
     # create array of size 1 X number of questions to store jaccard sim score between query and that question
@@ -43,7 +42,7 @@ def jaccard_search(query, dataset=[]):
 '''
 
 
-# TODO: Decide whether to use combined or separate
+#separate works better rn
 def cosine_combined_search(query, query_code=None):
     query_tokens = language_tokenizer.encode(query).tokens
     if query_code is not None:
@@ -77,9 +76,24 @@ def cosine_search(query, query_code=None):
         points = np.array([a ** 2 + b ** 2 for a, b in zip(language_cosine_sim, code_cosine_sim)])
 
         relevant_indices = (-points).argsort()[:10].tolist()
+        print(relevant_indices)
+         #norm of scores length of all posts
+        relevant_indices_update = social_update(relevant_indices,points)
+        print(relevant_indices_update)
     else:
         relevant_indices = (-language_cosine_sim).argsort()[:10].tolist()
-    return df.iloc[relevant_indices]
+        relevant_indices_update = social_update(relevant_indices,language_cosine_sim)
+    return df.iloc[relevant_indices_update]
+
+def social_update(relevant_indices, sim_scores):
+    norm = np.linalg.norm(df['a_score']) #other fields: q_view_count, q_score,a_view_count
+    sc_norm=df['a_score']/norm
+    final_scores=np.zeros(10)
+    for i, rel_ind in enumerate(relevant_indices):
+        final_scores[i]=(1/sc_norm[rel_ind])*sim_scores[rel_ind]
+    rel_dict = {k: v for k,v in enumerate(relevant_indices)}
+    list_dict=sorted(rel_dict.items(), key= lambda x: final_scores[x[0]], reverse=True)
+    return [v for (k,v) in list_dict]
 
 # run cosine sim on a user query
 # note: uses variables that were intially created in init_cosine.py
