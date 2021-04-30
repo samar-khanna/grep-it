@@ -128,8 +128,8 @@ class App extends Component {
             <div className={styles.buttonShadow} />
           </div>
           <div className={styles.buttonContainer}>
-            <input type="Submit" className={styles.button} style={{ "background-color": "var(--blue)" }} value="Surprise Me !" onClick={this.onShuffle} />
-            <div className={styles.buttonShadow} style={{ "background-color": "var(--dark-blue)" }} />
+            <input type="Submit" className={styles.button} style={{ "backgroundColor": "var(--blue)" }} value="Surprise Me !" onClick={this.onShuffle} />
+            <div className={styles.buttonShadow} style={{ "backgroundColor": "var(--dark-blue)" }} />
           </div>
           <div ref={this.resultsContainer}> {results} </div>
         </div>
