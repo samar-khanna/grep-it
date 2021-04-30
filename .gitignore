@@ -131,6 +131,13 @@ dmypy.json
 # PyCharm stuff
 .idea/
 
+**/.DS_Store
+.env
+keys/*
+!keys/.gitkeep
+*.csv
+data/*.csv
+
 # Frontend stuff
 frontend/node_modules/
 

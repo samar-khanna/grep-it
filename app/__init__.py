@@ -9,14 +9,17 @@ from marshmallow_enum import EnumField
 from .irsystem.models.search import *
 app = Flask(__name__, static_folder='../frontend/build/static', template_folder="../frontend/build")
 
+
 class InputType(Enum):
     text = 1
     code = 2
     both = 3
 
+
 class SearchFunction(Enum):
     jaccard = 1
     cosine = 2
+
 
 class SearchSchema(Schema):
     function = EnumField(SearchFunction)
@@ -24,9 +27,11 @@ class SearchSchema(Schema):
     query = fields.String()
     query_code = fields.String()
 
+
 @app.route("/")
 def index():
     return render_template("index.html")
+
 
 def df_to_list(df):
     res = []
@@ -36,6 +41,7 @@ def df_to_list(df):
             "title": row["q_title"]
         })
     return res
+
 
 @app.route('/search', methods=['POST'])
 def search():
@@ -62,7 +68,7 @@ def search():
 
     res = []
     if request_data["function"] == "cosine":
-        res = cosine_combined_search(query, query_code=query_code)
+        res = cosine_search(query, query_code=query_code)
     elif request_data["function"] == "jaccard":
         res = jaccard_search(request_data["query"])
 
