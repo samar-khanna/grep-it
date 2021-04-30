@@ -11,6 +11,21 @@
     box-sizing: border-box;
 }
 
+.questionContainer {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: flex-start;
+	margin-bottom: 16px;
+}
+
+.answerContainer {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+
 pre, code {
 	background-color: white;
 	border-radius: 4px;
@@ -34,12 +49,4 @@ p {
 
 ul, ol {
 	list-style-type: none;
-}
-
-.urlContainer {
-	display: flex;
-	flex-direction: row;
-	justify-content: flex-start;
-	align-items: center;
-	margin-top: 32px;
 }
