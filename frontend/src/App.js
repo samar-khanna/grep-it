@@ -166,7 +166,7 @@ class App extends Component {
               style={{ backgroundColor: "var(--dark-blue)" }}
             />
           </div>
-          <div ref={this.resultsContainer}> {results} </div>
+          <div ref={this.resultsContainer} className={styles.resultsContainer} > {results} </div>
         </div>
       </div>
     );
