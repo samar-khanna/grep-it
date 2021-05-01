@@ -1,6 +1,7 @@
 import os
 import argparse
 import fasttext
+import numpy as np
 import pandas as pd
 from tokenizers import Tokenizer
 from data.rust_tokenizer import train_tokenizer
@@ -40,14 +41,19 @@ def create_train_tokens(df, tokenizer_file=None):
 if __name__ == "__main__":
     args = passed_arguments()
 
-    if args.restart:
-        df = pd.read_csv(args.df)
-        code_tokens = create_train_tokens(df, args.tokenizer)
+    # if args.restart:
+    df = pd.read_csv(args.df)
+    code_tokens = create_train_tokens(df, args.tokenizer)
 
-        with open(args.train_text, 'w', encoding='utf8') as f:
-            for idx, row in code_tokens.iteritems():
-                f.write(' '.join(row) + '\n')
+    with open(args.train_text, 'w', encoding='utf8') as f:
+        for idx, row in code_tokens.iteritems():
+            f.write(' '.join(row) + '\n')
 
-    model = fasttext.train_unsupervised(args.train_text)
+    model = fasttext.train_unsupervised(args.train_text, bucket=50000)
     model.save_model('data/gh_skipgram.bin')
+
+    code_embedding = [model.get_sentence_vector(' '.join(tokens))
+                      for tokens in code_tokens]
+    np.save('data/gh_code_embedding.npy', np.array(code_embedding, dtype=np.float32))
+
 
