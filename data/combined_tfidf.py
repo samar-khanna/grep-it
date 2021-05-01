@@ -8,8 +8,8 @@ import scipy.sparse
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-from data.rust_tokenizer import add_code_tokens
-from data.language_tokenizer import add_language_tokens
+from data.rust_tfidf import add_code_tokens
+from data.language_tfidf import add_language_tokens
 
 
 def create_tfidf(df):
