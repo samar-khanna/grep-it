@@ -6,7 +6,7 @@ import re
 from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 # from init_cosine import *
-from .init_cosine import *
+from .init_tfidf import *
 from .init_skipgram_embedding import *
 
 '''
@@ -43,6 +43,7 @@ def jaccard_search(query, dataset=[]):
 ========================= cosine sim ====================================
 '''
 
+
 def gh_cosine_combined_embedding_search(query, query_code=None):
     query_tokens = gh_rust_tokenizer.encode(query).tokens
     if query_code is not None:
@@ -56,37 +57,37 @@ def gh_cosine_combined_embedding_search(query, query_code=None):
     # Get top 10 relevant results
     relevant_indices = (-cosine_similarities).argsort()[:10].tolist()
 
-    result = gh_code_metadata.iloc(relevant_indices)
+    result = gh_code_metadata.iloc[relevant_indices]
     return result
 
 
 # TODO: Decide whether to use combined or separate
 def cosine_combined_search(query, query_code=None):
-    query_tokens = language_tokenizer.encode(query).tokens
+    query_tokens = so_language_tokenizer.encode(query).tokens
     if query_code is not None:
-        query_tokens += code_tokenizer.encode(query_code).tokens
+        query_tokens += so_code_tokenizer.encode(query_code).tokens
 
-    query_tf_idf = combined_vectorizer.transform([' '.join(query_tokens)])
+    query_tf_idf = so_combined_vectorizer.transform([' '.join(query_tokens)])
 
     # calculate cosine sim between docs and query
-    cosine_similarities = cosine_similarity(query_tf_idf, combined_tf_idf).flatten()
+    cosine_similarities = cosine_similarity(query_tf_idf, so_combined_tf_idf).flatten()
 
     # Get top 10 relevant results
     relevant_indices = (-cosine_similarities).argsort()[:10].tolist()
 
-    result = df.iloc[relevant_indices]
+    result = so_df.iloc[relevant_indices]
     return result
 
 
 def cosine_search(query, query_code=None):
-    query_tokens = language_tokenizer.encode(query).tokens
-    query_tf_idf = language_vectorizer.transform([' '.join(query_tokens)])
-    language_cosine_sim = cosine_similarity(query_tf_idf, language_tf_idf).flatten()
+    query_tokens = so_language_tokenizer.encode(query).tokens
+    query_tf_idf = so_language_vectorizer.transform([' '.join(query_tokens)])
+    language_cosine_sim = cosine_similarity(query_tf_idf, so_language_tf_idf).flatten()
 
     if query_code is not None:
-        query_code_tokens = code_tokenizer.encode(query_code).tokens
-        query_code_tf_idf = code_vectorizer.transform([' '.join(query_code_tokens)])
-        code_cosine_sim = cosine_similarity(query_code_tf_idf, code_tf_idf).flatten()
+        query_code_tokens = so_code_tokenizer.encode(query_code).tokens
+        query_code_tf_idf = so_code_vectorizer.transform([' '.join(query_code_tokens)])
+        code_cosine_sim = cosine_similarity(query_code_tf_idf, so_code_tf_idf).flatten()
 
         # create 2D space with language and code similarites and score
         # based on distance from the origin prioritizes a high language/code score
@@ -96,10 +97,10 @@ def cosine_search(query, query_code=None):
         relevant_indices = (-points).argsort()[:10].tolist()
     else:
         relevant_indices = (-language_cosine_sim).argsort()[:10].tolist()
-    return df.iloc[relevant_indices]
+    return so_df.iloc[relevant_indices]
 
 # run cosine sim on a user query
-# note: uses variables that were intially created in init_cosine.py
+# note: uses variables that were intially created in init_tfidf.py
 # def cosine_search(query):
 #     # process query
 #     query_tokens = language_tokenizer.encode(query).tokens
