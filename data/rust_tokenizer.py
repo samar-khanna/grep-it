@@ -12,7 +12,7 @@ def train_tokenizer(all_text, out_file='data/rust-tokenizer.json'):
     tokenizer = Tokenizer(BPE(unk_token="[UNK]"))
     trainer = BpeTrainer(special_tokens=["[UNK]", "[CLS]", "[SEP]", "[PAD]", "[MASK]"])
 
-    syntax_regexp = Regex(r'[\[\]{}\(\);]|[=<>",_.&*]|::|->')
+    syntax_regexp = Regex(r'[\[\]{}\(\);]|[=<>",_.&*\'\\]|::|->')
     camel_case_regexp = Regex(r'(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])')
     common_keyword_regexp = Regex(r'let|const|fn|if|else|self|println')
     small_var_regexp = Regex(r'\b(\w{1})\b\s?')  # or r'\b(\w{1,2})\b\s?'
