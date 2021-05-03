@@ -6,7 +6,7 @@ from flask import Flask, render_template, request
 from marshmallow import Schema, fields, ValidationError
 from marshmallow_enum import EnumField
 
-from .irsystem.models.search import *
+from .irsystem.search import *
 app = Flask(__name__, static_folder='../frontend/build/static', template_folder="../frontend/build")
 
 
