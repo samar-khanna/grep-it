@@ -44,7 +44,7 @@ def jaccard_search(query, dataset=[]):
 '''
 
 
-def gh_cosine_combined_embedding_search(query, query_code=None):
+def gh_cosine_combined_embedding_search(query, query_code=None, count=5):
     query_tokens = gh_rust_tokenizer.encode(query).tokens
     if query_code is not None:
         query_tokens += gh_rust_tokenizer.encode(query_code).tokens
@@ -55,14 +55,14 @@ def gh_cosine_combined_embedding_search(query, query_code=None):
     cosine_similarities = cosine_similarity(query_vec, gh_code_vecs).flatten()
 
     # Get top 10 relevant results
-    relevant_indices = (-cosine_similarities).argsort()[:10].tolist()
+    relevant_indices = (-cosine_similarities).argsort()[:count].tolist()
 
     result = gh_code_metadata.iloc[relevant_indices]
     return result
 
 
 # TODO: Decide whether to use combined or separate
-def cosine_combined_search(query, query_code=None):
+def so_cosine_combined_search(query, query_code=None, count=5):
     query_tokens = so_language_tokenizer.encode(query).tokens
     if query_code is not None:
         query_tokens += so_code_tokenizer.encode(query_code).tokens
@@ -73,13 +73,13 @@ def cosine_combined_search(query, query_code=None):
     cosine_similarities = cosine_similarity(query_tf_idf, so_combined_tf_idf).flatten()
 
     # Get top 10 relevant results
-    relevant_indices = (-cosine_similarities).argsort()[:10].tolist()
+    relevant_indices = (-cosine_similarities).argsort()[:count].tolist()
 
     result = so_df.iloc[relevant_indices]
     return result
 
 
-def cosine_search(query, query_code=None):
+def cosine_search(query, query_code=None, count=5):
     query_tokens = so_language_tokenizer.encode(query).tokens
     query_tf_idf = so_language_vectorizer.transform([' '.join(query_tokens)])
     language_cosine_sim = cosine_similarity(query_tf_idf, so_language_tf_idf).flatten()
@@ -94,9 +94,9 @@ def cosine_search(query, query_code=None):
         # over the same score between language and code
         points = np.array([a ** 2 + b ** 2 for a, b in zip(language_cosine_sim, code_cosine_sim)])
 
-        relevant_indices = (-points).argsort()[:10].tolist()
+        relevant_indices = (-points).argsort()[:count].tolist()
     else:
-        relevant_indices = (-language_cosine_sim).argsort()[:10].tolist()
+        relevant_indices = (-language_cosine_sim).argsort()[:count].tolist()
     return so_df.iloc[relevant_indices]
 
 # run cosine sim on a user query
