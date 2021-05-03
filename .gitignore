@@ -137,6 +137,7 @@ keys/*
 !keys/.gitkeep
 *.csv
 data/*.csv
+!data/gh_fn_metadata.csv
 
 # Frontend stuff
 frontend/node_modules/
