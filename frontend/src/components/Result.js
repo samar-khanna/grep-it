@@ -1,5 +1,4 @@
 import { Component } from "react";
-import ReactDOM from 'react-dom';
 import styles from '../styles/Result.module.css';
 
 class Result extends Component {

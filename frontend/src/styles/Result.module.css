@@ -24,12 +24,19 @@
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: flex-start;
+	width: 100%;
+}
+
+.answerContainer > div {
+	width: 100%;
 }
 
 pre, code {
 	width: 100%;
 	background-color: white;
 	border-radius: 4px;
+	box-sizing: border-box;
+	overflow: scroll;
 }
 
 code {
@@ -41,7 +48,6 @@ code {
 pre {
 	padding: 8px 12px;
 	margin: 16px 0;
-	overflow: scroll;
 }
 
 pre:last-child {
