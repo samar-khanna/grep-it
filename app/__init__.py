@@ -39,7 +39,8 @@ def df_to_list(df):
         res.append({
             "url": f'https://stackoverflow.com/questions/{row["q_id"]}',
             "title": row["q_title"],
-            "answer": row["a_body"]
+            "answer": row["a_body"],
+            "upvoteScore": row["a_score"],
         })
     return res
 

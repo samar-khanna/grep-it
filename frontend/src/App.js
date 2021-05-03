@@ -158,7 +158,7 @@ class App extends Component {
               type="Submit"
               className={styles.button}
               style={{ backgroundColor: "var(--blue)" }}
-              value="Surprise Me !"
+              value="Surprise Me!"
               onClick={this.onShuffle}
             />
             <div

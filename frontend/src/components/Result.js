@@ -13,6 +13,10 @@ class Result extends Component {
                     <div className="bold">Question:&nbsp;</div>
                     <a href={this.props.url}>{this.props.title}</a>
                 </div>
+                <div className={styles.questionContainer}>
+                    <div className="bold">Answer Upvote Score:&nbsp;</div>
+                    <div>{this.props.upvoteScore}</div>
+                </div>
                 <div className={styles.answerContainer}>
                     <div className="bold">Answer:</div>
                     <div
