@@ -53,8 +53,8 @@ def gh_df_to_list(df):
         res.append({
             "repo_name": row["repo_name"],
             "repo_link": f'https://github.com/{row["repo_name"]}',
-            "filepath": "TODO",
-            "raw_file": f'https://raw.githubusercontent.com/{row["repo_name"]}/master/README.md',
+            "filepath": row["path"],
+            "raw_file": f'https://raw.githubusercontent.com/{row["repo_name"]}/master/{row["path"]}',
             "type": "github"
         })
     return res
