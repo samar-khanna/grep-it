@@ -85,7 +85,7 @@ def search():
         query_code = request_data["query_code"] if len(request_data["query_code"]) > 0 else None
 
     gh_res = gh_cosine_combined_embedding_search(query, query_code=query_code)
-    so_res = so_cosine_combined_search(query, query_code=query_code)
+    so_res = so_cosine_search(query, query_code=query_code)
 
     ret = so_df_to_list(so_res) + gh_df_to_list(gh_res)
     return dumps({
