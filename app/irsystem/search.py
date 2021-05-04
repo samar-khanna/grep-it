@@ -61,12 +61,24 @@ def gh_cosine_combined_embedding_search(query, query_code=None, count=5):
     return result
 
 
+def so_social_update(relevant_indices, sim_scores):
+    # other fields: q_view_count, q_score, a_view_count
+    norm = np.linalg.norm(so_metadata['a_score'])
+    sc_norm = so_metadata['a_score'] / norm
+    final_scores = np.zeros(10)
+    for i, rel_ind in enumerate(relevant_indices):
+        final_scores[i] = (1 / sc_norm[rel_ind]) * sim_scores[rel_ind]
+    rel_dict = {k: v for k, v in enumerate(relevant_indices)}
+    list_dict = sorted(rel_dict.items(), key=lambda x: final_scores[x[0]], reverse=True)
+    return [v for (k, v) in list_dict]
+
+
 def so_cosine_search(query, query_code=None, count=5):
     query_tokens = so_lang_tokenizer.encode(query).tokens
     query_lang_vec = so_lang_model.get_sentence_vector(' '.join(query_tokens))
     query_lang_vec = query_lang_vec.reshape(1, -1)
 
-    language_cosine_sim = cosine_similarity(query_lang_vec, so_lang_vecs).flatten()
+    cosine_sim = cosine_similarity(query_lang_vec, so_lang_vecs).flatten()
 
     if query_code is not None:
         query_code_tokens = so_code_tokenizer.encode(query_code).tokens
@@ -80,14 +92,14 @@ def so_cosine_search(query, query_code=None, count=5):
         # over the same score between language and code
         # points = np.array([a ** 2 + b ** 2 for a, b in zip(language_cosine_sim, code_cosine_sim)])
 
-        cosine_sim = 0.5*language_cosine_sim + 0.5*code_cosine_sim
+        cosine_sim = 0.5 * cosine_sim + 0.5 * code_cosine_sim
 
         relevant_indices = (-cosine_sim).argsort()[:count].tolist()
     else:
-        relevant_indices = (-language_cosine_sim).argsort()[:count].tolist()
+        relevant_indices = (-cosine_sim).argsort()[:count].tolist()
 
+    relevant_indices = so_social_update(relevant_indices, cosine_sim)
     return so_metadata.iloc[relevant_indices]
-
 
 # # TODO: Decide whether to use combined or separate
 # def so_cosine_combined_search(query, query_code=None, count=5):
