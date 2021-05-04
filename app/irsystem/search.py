@@ -9,35 +9,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 # from .init_tfidf import *
 from .init_skipgram_embedding import *
 
-'''
-========================= jaccard ====================================
-'''
-
-
-def jaccard_sim(query_lst, question_lst):
-    inter = len(list(set(query_lst).intersection(question_lst)))
-    union = (len(query_lst) + len(question_lst)) - inter
-    return float(inter) / union
-
-
-def tokenize(str):
-    return str.split()
-
-
-def jaccard_search(query, dataset=[]):
-    df = pd.read_csv('./data/so_rust.csv')
-    # sample simple jaccard sim between query and questions in df
-    q_df = df[['q_id', 'q_title']]
-    # create array of size 1 X number of questions to store jaccard sim score between query and that question
-    j_sim = np.zeros(27498)
-    for j_sim_index in range(27498):
-        j_sim[j_sim_index] = jaccard_sim(tokenize(query), tokenize(q_df['q_title'][j_sim_index]))
-    max_index = np.argmax(j_sim)
-    # get the full q & a pair from the df
-    # print(df.iloc[max_index])
-    return [df['q_title'][max_index],
-            df['a_body'][max_index]]  # returns [question, answer body] pair with highest score
-
 
 '''
 ========================= cosine sim ====================================
@@ -64,13 +35,16 @@ def gh_cosine_combined_embedding_search(query, query_code=None, count=5):
 def so_social_update(relevant_indices, sim_scores):
     # other fields: q_view_count, q_score, a_view_count
     norm = np.linalg.norm(so_metadata['a_score'])
-    sc_norm = so_metadata['a_score'] / norm
-    final_scores = np.zeros(10)
-    for i, rel_ind in enumerate(relevant_indices):
-        final_scores[i] = (1 / sc_norm[rel_ind]) * sim_scores[rel_ind]
-    rel_dict = {k: v for k, v in enumerate(relevant_indices)}
-    list_dict = sorted(rel_dict.items(), key=lambda x: final_scores[x[0]], reverse=True)
-    return [v for (k, v) in list_dict]
+    scaled_norm = so_metadata['a_score'] / norm
+    final_scores = (1 / scaled_norm[relevant_indices]) * sim_scores[relevant_indices]
+    resorted_inds = np.array(relevant_indices)[(-final_scores).argsort()]
+    return resorted_inds.tolist()
+    # final_scores = np.zeros(len(relevant_indices))
+    # for i, rel_ind in enumerate(relevant_indices):
+    #     final_scores[i] = (1 / sc_norm[rel_ind]) * sim_scores[rel_ind]
+    # rel_dict = {k: v for k, v in enumerate(relevant_indices)}
+    # list_dict = sorted(rel_dict.items(), key=lambda x: final_scores[x[0]], reverse=True)
+    # return [v for (k, v) in list_dict]
 
 
 def so_cosine_search(query, query_code=None, count=5):
