@@ -84,7 +84,7 @@ class App extends Component {
       .then((response) => response.json())
       .then((results) => {
         this.setState({ soResults: results.so, ghResults: results.gh });
-        this.tabContainer.current.scrollIntoView();
+        this.tabContainer.current.scrollIntoView(true);
       });
   };
 
@@ -173,7 +173,7 @@ class App extends Component {
               style={{ backgroundColor: "var(--dark-blue)" }}
             />
           </div>
-          <div ref={this.tabContainer} className={styles.tabContainer}>
+          <div ref={this.tabContainer} id="tabContainer" className={styles.tabContainer}>
             <div
               onClick={() => this.setState({ tab: "so" })}
               style={ this.state.tab === "so" ? { borderBottom: "2px solid var(--black)", color: "var(--black)", top: "1px" } : {} }

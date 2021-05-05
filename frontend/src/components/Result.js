@@ -1,4 +1,4 @@
-import { Component, useEffect } from "react";
+import { Component } from "react";
 import styles from '../styles/Result.module.css';
 
 class Result extends Component {
@@ -63,60 +63,32 @@ class Result extends Component {
             )
         } else {
             let answer = this.state.answer === undefined ? "<div>Loading...</div>" : this.state.answer;
-            // if (this.state.answer === undefined) {
-                return (
-                    <div className={styles.container}>
-                        <div className={styles.questionContainer}>
-                            <div className="bold">Repository:&nbsp;</div>
-                            <a className={styles.value} href={this.props.repo_link}>{this.props.repo_name}</a>
-                        </div>
-                        <div className={styles.questionContainer}>
-                            <div className="bold">File:&nbsp;</div>
-                            <div className={styles.value}>{this.props.filepath}</div>
-                        </div>
-                        <div className={styles.questionContainer}>
-                            <div className="bold">Answer Star Score:&nbsp;</div>
-                            <div className={styles.value}>{this.props.stars}</div>
-                        </div>
-                        <div className={styles.answerContainer}>
-                            <div className="bold">Answer:</div>
-                            <div
-                                className={styles.answer}
-                                id={styles.ghAnswer}
-                                dangerouslySetInnerHTML={{
-                                    __html: answer
-                                }}
-                            />
-                        </div>
+            return (
+                <div className={styles.container}>
+                    <div className={styles.questionContainer}>
+                        <div className="bold">Repository:&nbsp;</div>
+                        <a className={styles.value} href={this.props.repo_link}>{this.props.repo_name}</a>
                     </div>
-                )
-            // } else {
-            //     return (
-            //         <div className={styles.container}>
-            //             <div className={styles.questionContainer}>
-            //                 <div className="bold">Repository:&nbsp;</div>
-            //                 <a href={this.props.repo_link}>{this.props.repo_name}</a>
-            //             </div>
-            //             <div className={styles.questionContainer}>
-            //                 <div className="bold">File:&nbsp;</div>
-            //                 {this.props.filepath}
-            //             </div>
-            //             <div className={styles.questionContainer}>
-            //                 <div className="bold">Answer Star Score:&nbsp;</div>
-            //                 <div>{this.props.stars}</div>
-            //             </div>
-            //             <div className={styles.answerContainer}>
-            //                 <div className="bold">Answer:</div>
-            //                 <div
-            //                     className={styles.answer}
-            //                     dangerouslySetInnerHTML={{
-            //                         __html: "<div>Loading...</div>"
-            //                     }}
-            //                 />
-            //             </div>
-            //         </div>
-            //     )
-            // }
+                    <div className={styles.questionContainer}>
+                        <div className="bold">File:&nbsp;</div>
+                        <div className={styles.value}>{this.props.filepath}</div>
+                    </div>
+                    <div className={styles.questionContainer}>
+                        <div className="bold">Answer Star Score:&nbsp;</div>
+                        <div className={styles.value}>{this.props.stars}</div>
+                    </div>
+                    <div className={styles.answerContainer}>
+                        <div className="bold">Answer:</div>
+                        <div
+                            className={styles.answer}
+                            id={styles.ghAnswer}
+                            dangerouslySetInnerHTML={{
+                                __html: answer
+                            }}
+                        />
+                    </div>
+                </div>
+            )
         }
     }
 }
