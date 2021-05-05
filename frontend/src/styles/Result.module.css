@@ -44,12 +44,6 @@ pre, code {
 	overflow: scroll;
 }
 
-code {
-	padding: 0 4px;
-	margin: 0 1px;
-	font-family: "Monda", sans-serif;
-}
-
 pre {
 	padding: 8px 12px;
 	margin: 16px 0;
@@ -57,6 +51,17 @@ pre {
 
 pre:last-child {
 	margin-bottom: 0;
+}
+
+code {
+	padding: 0 4px;
+	margin: 0 1px;
+	font-family: "Monda", sans-serif;
+}
+
+#ghAnswer code {
+	margin: 0;
+	padding: 0;
 }
 
 p {

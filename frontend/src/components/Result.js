@@ -82,6 +82,7 @@ class Result extends Component {
                             <div className="bold">Answer:</div>
                             <div
                                 className={styles.answer}
+                                id={styles.ghAnswer}
                                 dangerouslySetInnerHTML={{
                                     __html: answer
                                 }}
