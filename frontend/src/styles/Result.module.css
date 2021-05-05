@@ -9,8 +9,6 @@
     padding: 10px;
     line-height: 32px;
     box-sizing: border-box;
-
-    overflow-wrap: break-word;
 }
 
 .questionContainer {
@@ -19,6 +17,11 @@
 	justify-content: flex-start;
 	align-items: flex-start;
 	margin-bottom: 16px;
+}
+
+.value {
+	overflow-wrap: break-word;
+	word-break: break-all;
 }
 
 .answerContainer {
