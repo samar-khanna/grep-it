@@ -90,5 +90,5 @@ def search():
 
     ret = so_df_to_list(so_res) + gh_df_to_list(gh_res)
     return dumps({
-        "count": len(ret), "result": ret
+        "count": len(ret), "so": so_df_to_list(so_res), "gh": gh_df_to_list(gh_res)
     }), 200

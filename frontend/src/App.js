@@ -13,7 +13,9 @@ class App extends Component {
       textInputFocused: false,
       text: "",
       code: "",
-      results: undefined,
+      soResults: undefined,
+      ghResults: undefined,
+      tab: "so",
     };
     this.resultsContainer = React.createRef();
     this.textareaRef = React.createRef();
@@ -81,7 +83,7 @@ class App extends Component {
     })
       .then((response) => response.json())
       .then((results) => {
-        this.setState({ results: results });
+        this.setState({ soResults: results.so, ghResults: results.gh });
         this.resultsContainer.current.scrollIntoView();
       });
   };
@@ -116,9 +118,10 @@ class App extends Component {
       rows = 4;
     }
     let results = [];
-    if (this.state.results !== undefined) {
-      results = this.state.results["result"].map((item, index) => (
-        <Result key={index} {...item} />
+    let toBeMapped = this.state.tab === "so" ? this.state.soResults : this.state.ghResults;
+    if (toBeMapped !== undefined) {
+      results = toBeMapped.map((item, index) => (
+        <Result key={index} {...item} type={this.state.tab} />
       ));
     }
 
@@ -167,6 +170,20 @@ class App extends Component {
               className={styles.buttonShadow}
               style={{ backgroundColor: "var(--dark-blue)" }}
             />
+          </div>
+          <div className={styles.tabContainer}>
+            <div
+              onClick={() => this.setState({ tab: "so" })}
+              style={ this.state.tab === "so" ? { borderBottom: "2px solid var(--black)", color: "var(--black)", top: "1px" } : {} }
+            >
+              Stack Overflow
+            </div>
+            <div
+              onClick={() => this.setState({ tab: "gh" })}
+              style={ this.state.tab === "gh" ? { borderBottom: "2px solid var(--black)", color: "var(--black)", top: "1px" } : {} }
+            >
+              GitHub
+            </div>
           </div>
           <div ref={this.resultsContainer} className={styles.resultsContainer} > {results} </div>
         </div>
