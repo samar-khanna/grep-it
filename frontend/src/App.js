@@ -120,35 +120,34 @@ class App extends Component {
     let results = [];
     let toBeMapped = this.state.tab === "so" ? this.state.soResults : this.state.ghResults;
     if (toBeMapped !== undefined) {
-      results = toBeMapped.map((item, index) => {
-        if (this.state.tab == "so") {
+      // if (this.state.tab === "so") {
+        results = toBeMapped.map((item, index) => {
           return (
             <Result key={index} {...item} type={this.state.tab} />
           )
-        } else {
-          console.log(`https://api.github.com/repos/${item.repo_name}/git/blobs/${item.blob_id}`)
-          fetch(`https://api.github.com/repos/${item.repo_name}/git/blobs/${item.blob_id}`, {
-            method: "GET",
-            headers: {
-                "Accept": "application/vnd.github.v3+json",
-                // "Authorization": `Basic ${btoa("LucaKoval")}`
-                "Authorization": `Basic ${btoa("arpitkalla")}`
-            },
-          })
-          .then(res => res.json())
-          .then(
-            res => {
-              let answer = `<pre><code>${atob(res.content)}</code></pre>`;
-              return (
-                <Result key={index} {...item} type={this.state.tab} answer={answer} />
-              )
-            },
-            err => {
-              console.log(`Error: ${err}`)
-            }
-          )
-        }
-      });
+        });
+      // } else {
+      //   let index = 0;
+      //   for (let result of toBeMapped) {
+      //     fetch(`https://api.github.com/repos/${result.repo_name}/git/blobs/${result.blob_id}`, {
+      //         method: "GET",
+      //         headers: {
+      //             "Accept": "application/vnd.github.v3+json",
+      //             "Authorization": `Basic ${btoa("LucaKoval")}`
+      //         },
+      //     })
+      //     .then(res => {
+      //       res.json().then(data => {
+      //         if (res.status === 200) {
+      //           // console.log(data)
+      //           let answer = `<pre><code>${atob(data.content)}</code></pre>`
+      //           let html = <Result key={index} {...data} type={this.state.tab} answer={answer} />
+      //           results.push(html)
+      //         }
+      //       })
+      //     })
+      //   }
+      // }
     }
 
     return (

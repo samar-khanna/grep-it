@@ -52,7 +52,7 @@ class Result extends Component {
             //     }
             // )
             // if (!this.state.loaded) {
-            console.log(this.props.answer.slice(0, 40))
+            // console.log(this.props.answer.slice(0, 40))
                 return (
                     <div className={styles.container}>
                         <div className={styles.questionContainer}>
