@@ -9,6 +9,8 @@
     padding: 10px;
     line-height: 32px;
     box-sizing: border-box;
+
+    overflow-wrap: break-word;
 }
 
 .questionContainer {

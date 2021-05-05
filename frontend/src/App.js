@@ -17,7 +17,7 @@ class App extends Component {
       ghResults: undefined,
       tab: "so",
     };
-    this.resultsContainer = React.createRef();
+    this.tabContainer = React.createRef();
     this.textareaRef = React.createRef();
     this.cursorPosition = 0;
     this.query_idx = Math.floor(Math.random() * queries.length);
@@ -84,7 +84,7 @@ class App extends Component {
       .then((response) => response.json())
       .then((results) => {
         this.setState({ soResults: results.so, ghResults: results.gh });
-        this.resultsContainer.current.scrollIntoView();
+        this.tabContainer.current.scrollIntoView();
       });
   };
 
@@ -120,9 +120,35 @@ class App extends Component {
     let results = [];
     let toBeMapped = this.state.tab === "so" ? this.state.soResults : this.state.ghResults;
     if (toBeMapped !== undefined) {
-      results = toBeMapped.map((item, index) => (
-        <Result key={index} {...item} type={this.state.tab} />
-      ));
+      results = toBeMapped.map((item, index) => {
+        if (this.state.tab == "so") {
+          return (
+            <Result key={index} {...item} type={this.state.tab} />
+          )
+        } else {
+          console.log(`https://api.github.com/repos/${item.repo_name}/git/blobs/${item.blob_id}`)
+          fetch(`https://api.github.com/repos/${item.repo_name}/git/blobs/${item.blob_id}`, {
+            method: "GET",
+            headers: {
+                "Accept": "application/vnd.github.v3+json",
+                // "Authorization": `Basic ${btoa("LucaKoval")}`
+                "Authorization": `Basic ${btoa("arpitkalla")}`
+            },
+          })
+          .then(res => res.json())
+          .then(
+            res => {
+              let answer = `<pre><code>${atob(res.content)}</code></pre>`;
+              return (
+                <Result key={index} {...item} type={this.state.tab} answer={answer} />
+              )
+            },
+            err => {
+              console.log(`Error: ${err}`)
+            }
+          )
+        }
+      });
     }
 
     return (
@@ -171,7 +197,7 @@ class App extends Component {
               style={{ backgroundColor: "var(--dark-blue)" }}
             />
           </div>
-          <div className={styles.tabContainer}>
+          <div ref={this.tabContainer} className={styles.tabContainer}>
             <div
               onClick={() => this.setState({ tab: "so" })}
               style={ this.state.tab === "so" ? { borderBottom: "2px solid var(--black)", color: "var(--black)", top: "1px" } : {} }
@@ -185,7 +211,7 @@ class App extends Component {
               GitHub
             </div>
           </div>
-          <div ref={this.resultsContainer} className={styles.resultsContainer} > {results} </div>
+          <div className={styles.resultsContainer} > {results} </div>
         </div>
       </div>
     );

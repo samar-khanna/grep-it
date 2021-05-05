@@ -42,13 +42,12 @@ def so_df_to_list(df):
             "title": row["q_title"],
             "answer": row["a_body"],
             "upvoteScore": row["a_score"],
-            "type": "so"
         })
     return res
 
 def gh_df_to_list(df):
     res = []
-    print(df)
+    # print(df)
     for _, row in df.iterrows():
         # Makes the assumption that every branch has master as opposed to main
         res.append({
@@ -56,7 +55,8 @@ def gh_df_to_list(df):
             "repo_link": f'https://github.com/{row["repo_name"]}',
             "filepath": row["path"],
             "raw_file": f'https://raw.githubusercontent.com/{row["repo_name"]}/master/{row["path"]}',
-            "type": "github"
+            "stars": row["stars"],
+            "blob_id": row["id"],
         })
     return res
 
