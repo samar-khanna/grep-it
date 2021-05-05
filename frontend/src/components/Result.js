@@ -6,7 +6,8 @@ class Result extends Component {
         super(props)
 
         this.state = {
-            answer: undefined
+            answer: undefined,
+            minimized: true,
         };
     }
 
@@ -39,53 +40,94 @@ class Result extends Component {
     }
 
     render() {
+        const arrow = () => {
+            if (this.state.minimized) {
+                return (
+                    <svg width="14" height="8" className={styles.arrow} >
+                        <line x1="2" y1="2" x2="7" y2="7" />
+                        <line x1="12" y1="2" x2="7" y2="7" />
+                        <circle cx="7" cy="7" r="1" />
+                    </svg>
+                )
+            } else {
+                return (
+                    <svg width="14" height="8" className={styles.arrow} >
+                        <line x1="2" y1="7" x2="7" y2="2" />
+                        <line x1="12" y1="7" x2="7" y2="2" />
+                        <circle cx="7" cy="2" r="1" />
+                    </svg>
+                )
+            }
+        }
         if (this.props.type === "so") {
             return (
-                <div className={styles.container}>
-                    <div className={styles.questionContainer}>
-                        <div className="bold">Question:&nbsp;</div>
-                        <a className={styles.value} href={this.props.url}>{this.props.title}</a>
+                <div className={styles.minimized} style={this.state.minimized ? { height: "300px" } : { height: "max-content", paddingBottom: "64px" }} >
+                    <div className={styles.container}>
+                        <div className={styles.questionContainer}>
+                            <div className="bold">Question:&nbsp;</div>
+                            <a className={styles.value} href={this.props.url}>{this.props.title}</a>
+                        </div>
+                        <div className={styles.questionContainer}>
+                            <div className="bold">Answer Upvote Score:&nbsp;</div>
+                            <div className={styles.value}>{this.props.upvoteScore}</div>
+                        </div>
+                        <div className={styles.answerContainer}>
+                            <div className="bold">Answer:</div>
+                            <div
+                                className={styles.answer}
+                                dangerouslySetInnerHTML={{
+                                    __html: this.props.answer
+                                }}
+                            />
+                        </div>
                     </div>
-                    <div className={styles.questionContainer}>
-                        <div className="bold">Answer Upvote Score:&nbsp;</div>
-                        <div className={styles.value}>{this.props.upvoteScore}</div>
-                    </div>
-                    <div className={styles.answerContainer}>
-                        <div className="bold">Answer:</div>
-                        <div
-                            className={styles.answer}
-                            dangerouslySetInnerHTML={{
-                                __html: this.props.answer
-                            }}
-                        />
+                    <div
+                        onClick={() => this.setState({ minimized: !this.state.minimized })}
+                        className={styles.expandContainer}
+                        style={this.state.minimized ? { top: "calc(300px - 64px)", boxShadow: "0px -2px 40px rgba(0, 0, 0, 0.4)" } : { bottom: "0px" }}
+                    >
+                        {arrow()}
+                        <div>{this.state.minimized ? "Expand" : "Minimize"}</div>
+                        {arrow()}
                     </div>
                 </div>
             )
         } else {
             let answer = this.state.answer === undefined ? "<div>Loading...</div>" : this.state.answer;
             return (
-                <div className={styles.container}>
-                    <div className={styles.questionContainer}>
-                        <div className="bold">Repository:&nbsp;</div>
-                        <a className={styles.value} href={this.props.repo_link}>{this.props.repo_name}</a>
+                <div className={styles.minimized} style={this.state.minimized ? { height: "300px" } : { height: "max-content", paddingBottom: "64px" }} >
+                    <div className={styles.container}> 
+                        <div className={styles.questionContainer}>
+                            <div className="bold">Repository:&nbsp;</div>
+                            <a className={styles.ghValue} href={this.props.repo_link}>{this.props.repo_name}</a>
+                        </div>
+                        <div className={styles.questionContainer}>
+                            <div className="bold">File:&nbsp;</div>
+                            <div className={styles.ghValue}>{this.props.filepath}</div>
+                        </div>
+                        <div className={styles.questionContainer}>
+                            <div className="bold">Answer Star Score:&nbsp;</div>
+                            <div>{this.props.stars}</div>
+                        </div>
+                        <div className={styles.answerContainer}>
+                            <div className="bold">Answer:</div>
+                            <div
+                                className={styles.answer}
+                                id={styles.ghAnswer}
+                                dangerouslySetInnerHTML={{
+                                    __html: answer
+                                }}
+                            />
+                        </div>
                     </div>
-                    <div className={styles.questionContainer}>
-                        <div className="bold">File:&nbsp;</div>
-                        <div className={styles.value}>{this.props.filepath}</div>
-                    </div>
-                    <div className={styles.questionContainer}>
-                        <div className="bold">Answer Star Score:&nbsp;</div>
-                        <div className={styles.value}>{this.props.stars}</div>
-                    </div>
-                    <div className={styles.answerContainer}>
-                        <div className="bold">Answer:</div>
-                        <div
-                            className={styles.answer}
-                            id={styles.ghAnswer}
-                            dangerouslySetInnerHTML={{
-                                __html: answer
-                            }}
-                        />
+                    <div
+                        onClick={() => this.setState({ minimized: !this.state.minimized })}
+                        className={styles.expandContainer}
+                        style={this.state.minimized ? { top: "calc(300px - 64px)", boxShadow: "0px -2px 40px rgba(0, 0, 0, 0.4)" } : { bottom: "0px" }}
+                    >
+                        {arrow()}
+                        <div>{this.state.minimized ? "Expand" : "Minimize"}</div>
+                        {arrow()}
                     </div>
                 </div>
             )
