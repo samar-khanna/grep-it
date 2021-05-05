@@ -48,6 +48,7 @@ class App extends Component {
         query: this.state.text,
         query_code: this.state.code,
         function: "cosine",
+        count: 5,
         input_type: "both",
       }),
     })
@@ -74,6 +75,7 @@ class App extends Component {
         query: queries[this.query_idx]["text"],
         query_code: queries[this.query_idx]["code"],
         function: "cosine",
+        count: 5,
         input_type: "both",
       }),
     })
