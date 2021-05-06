@@ -38,7 +38,7 @@ class Result extends Component {
                     let start = rangeArr[0];
                     let end = rangeArr[1];
                     if (res.status === 200) {
-                        let answer = `<pre><code>${atob(data.content).slice(start, end+1)}</code></pre>`
+                        let answer = `${atob(data.content).slice(start, end+1)}`
                         this.setState({ answer: answer })
                     }
                 })
@@ -121,10 +121,16 @@ class Result extends Component {
                             <div
                                 className={styles.answer}
                                 id={styles.ghAnswer}
-                                dangerouslySetInnerHTML={{
-                                    __html: answer
-                                }}
-                            />
+                                // dangerouslySetInnerHTML={{
+                                //     __html: answer
+                                // }}
+                            >
+                                <pre>
+                                    <code>
+                                        {answer}
+                                    </code>
+                                </pre>
+                            </div>
                         </div>
                     </div>
                     <div
