@@ -47,14 +47,13 @@ def so_df_to_list(df):
 
 def gh_df_to_list(df):
     res = []
-    print(df)
     for _, row in df.iterrows():
         # Makes the assumption that every branch has master as opposed to main
         res.append({
             "repo_name": row["repo_name"],
             "repo_link": f'https://github.com/{row["repo_name"]}',
-            "filepath": row["path"],
-            "raw_file": f'https://raw.githubusercontent.com/{row["repo_name"]}/master/{row["path"]}',
+            "filepath": row["file_path"],
+            "raw_file": f'https://raw.githubusercontent.com/{row["repo_name"]}/master/{row["file_path"]}',
             "type": "github"
         })
     return res
