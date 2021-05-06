@@ -36,7 +36,7 @@ def so_social_update(relevant_indices, sim_scores):
     # other fields: q_view_count, q_score, a_view_count
     norm = np.linalg.norm(so_metadata['a_score'])
     scaled_norm = so_metadata['a_score'] / norm
-    final_scores = (1 / scaled_norm[relevant_indices]) * sim_scores[relevant_indices]
+    final_scores = scaled_norm[relevant_indices] * sim_scores[relevant_indices]
     resorted_inds = np.array(relevant_indices)[(-final_scores).argsort()]
     return resorted_inds.tolist()
     # final_scores = np.zeros(len(relevant_indices))
