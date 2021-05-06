@@ -16,7 +16,10 @@ class Result extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.blob_id !== this.props.blob_id) this.getGitHubData();
+        if (prevProps.blob_id !== this.props.blob_id) {
+            this.setState({ answer: undefined, minimized: true });
+            this.getGitHubData();
+        }
     }
 
     getGitHubData = () => {

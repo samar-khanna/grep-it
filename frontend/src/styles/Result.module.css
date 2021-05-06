@@ -37,6 +37,8 @@
 	box-sizing: border-box;
 	border-bottom-right-radius: 6px;
 	border-bottom-left-radius: 6px;
+
+	transition: all 0.08s ease;
 }
 
 .expandContainer:hover {
