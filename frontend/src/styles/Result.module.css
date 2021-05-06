@@ -1,6 +1,124 @@
-.container {
-	width: 100%;
-	height: 200px;
+.minimized {
+	width: calc(4px + 100%);
+	position: relative;
 
-    background-color: var(--light-green);
+	margin-bottom: 20px;
+	overflow: hidden;
+	border-radius: 4px;
+	background-color: var(--light-grey);
+}
+
+.container {
+	position: relative;
+	right: 2px;
+	width: calc(4px + 100%);
+
+    background-color: var(--light-grey);
+    border-radius: 4px;
+    margin-bottom: 20px;
+    padding: 10px;
+    line-height: 32px;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+}
+
+.expandContainer {
+	width: 100%;
+	height: 64px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	position: absolute;
+	left: 0px;
+	background-color: white;
+	border: 4px solid var(--light-grey);
+	box-sizing: border-box;
+	border-bottom-right-radius: 6px;
+	border-bottom-left-radius: 6px;
+
+	transition: all 0.08s ease;
+}
+
+.expandContainer:hover {
+	cursor: pointer;
+}
+
+.expandContainer line {
+	stroke: var(--black);
+	stroke-width: 2px;
+}
+
+.expendContainer circle {
+	fill: var(--black);
+}
+
+.expandContainer > div {
+	margin: 0 4px;
+}
+
+.questionContainer {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: flex-start;
+	margin-bottom: 16px;
+}
+
+.ghValue {
+	overflow-wrap: break-word;
+	word-break: break-all;
+}
+
+.answerContainer {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	width: 100%;
+}
+
+.answerContainer > div {
+	width: 100%;
+}
+
+pre, code {
+	width: 100%;
+	background-color: white;
+	border-radius: 4px;
+	box-sizing: border-box;
+	overflow: scroll;
+}
+
+pre {
+	padding: 8px 12px;
+	margin: 16px 0;
+}
+
+pre:last-child {
+	margin-bottom: 0;
+}
+
+code {
+	padding: 0 4px;
+	margin: 0 1px;
+	font-family: "Monda", sans-serif;
+}
+
+#ghAnswer code {
+	margin: 0;
+	padding: 0;
+}
+
+p {
+	margin-bottom: 16px;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+
+ul, ol {
+	list-style-type: none;
 }
