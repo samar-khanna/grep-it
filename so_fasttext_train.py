@@ -94,17 +94,17 @@ if __name__ == "__main__":
             f.write(' '.join(row) + '\n')
 
     model_language = fasttext.train_unsupervised(args.lang_text, bucket=20000)
-    model_language.save_model('data/rust_qa_body/so_language_skipgram.bin')
+    model_language.save_model('data/so_rust_lang/so_language_skipgram.bin')
     language_embedding = [model_language.get_sentence_vector(' '.join(tokens))
                           for tokens in lang_tokens]
-    np.save('data/rust_qa_body/so_lang_embedding.npy',
+    np.save('data/so_rust_lang/so_lang_embedding.npy',
             np.array(language_embedding, dtype=np.float32))
 
     model_code = fasttext.train_unsupervised(args.code_text, bucket=20000)
-    model_code.save_model('data/rust_qa_code/so_code_skipgram.bin')
+    model_code.save_model('data/so_rust_code/so_code_skipgram.bin')
     code_embedding = [model_code.get_sentence_vector(' '.join(tokens))
                       for tokens in code_tokens]
-    np.save('data/rust_qa_code/so_code_embedding.npy',
+    np.save('data/so_rust_code/so_code_embedding.npy',
             np.array(code_embedding, dtype=np.float32))
 
 

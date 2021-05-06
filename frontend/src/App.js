@@ -57,8 +57,8 @@ class App extends Component {
     })
       .then((response) => response.json())
       .then((results) => {
-        this.setState({ results: results });
-        this.resultsContainer.current.scrollIntoView();
+        this.setState({ soResults: results.so, ghResults: results.gh });
+        this.tabContainer.current.scrollIntoView(true);
       });
   };
 
