@@ -121,9 +121,6 @@ class Result extends Component {
                             <div
                                 className={styles.answer}
                                 id={styles.ghAnswer}
-                                // dangerouslySetInnerHTML={{
-                                //     __html: answer
-                                // }}
                             >
                                 <pre>
                                     <code>
