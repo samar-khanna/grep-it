@@ -41,7 +41,7 @@ def so_df_to_list(df):
             "url": f'https://stackoverflow.com/questions/{row["q_id"]}',
             "title": row["q_title"],
             "answer": row["a_body"],
-            "type": "so"
+            "upvoteScore": row["a_score"],
         })
     return res
 
@@ -54,6 +54,8 @@ def gh_df_to_list(df):
             "repo_link": f'https://github.com/{row["repo_name"]}',
             "filepath": row["file_path"],
             "raw_file": f'https://raw.githubusercontent.com/{row["repo_name"]}/master/{row["file_path"]}',
+            "stars": row["stars"],
+            "blob_id": row["id"],
             "type": "github"
         })
     return res
@@ -88,5 +90,5 @@ def search():
 
     ret = so_df_to_list(so_res) + gh_df_to_list(gh_res)
     return dumps({
-            "count": len(ret), "result": ret
+        "count": len(ret), "so": so_df_to_list(so_res), "gh": gh_df_to_list(gh_res)
     }), 200

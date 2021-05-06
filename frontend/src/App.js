@@ -4,6 +4,7 @@ import "./styles/general.css";
 import styles from "./styles/App.module.css";
 import Result from "./components/Result";
 import queries from "./constants/Queries";
+import animation from "./animation/grepit-crypto-jumper.svg";
 
 class App extends Component {
   constructor(props) {
@@ -13,9 +14,11 @@ class App extends Component {
       textInputFocused: false,
       text: "",
       code: "",
-      results: undefined,
+      soResults: undefined,
+      ghResults: undefined,
+      tab: "so",
     };
-    this.resultsContainer = React.createRef();
+    this.tabContainer = React.createRef();
     this.textareaRef = React.createRef();
     this.cursorPosition = 0;
     this.query_idx = Math.floor(Math.random() * queries.length);
@@ -81,8 +84,8 @@ class App extends Component {
     })
       .then((response) => response.json())
       .then((results) => {
-        this.setState({ results: results });
-        this.resultsContainer.current.scrollIntoView();
+        this.setState({ soResults: results.so, ghResults: results.gh });
+        this.tabContainer.current.scrollIntoView(true);
       });
   };
 
@@ -116,16 +119,24 @@ class App extends Component {
       rows = 4;
     }
     let results = [];
-    if (this.state.results !== undefined) {
-      results = this.state.results["result"].map((item, index) => (
-        <Result key={index} {...item} />
-      ));
+    let toBeMapped = this.state.tab === "so" ? this.state.soResults : this.state.ghResults;
+    if (toBeMapped !== undefined) {
+      results = toBeMapped.map((item, index) => {
+        return (
+          <Result key={index} {...item} type={this.state.tab} />
+        )
+      });
     }
 
     return (
       <div className={styles.container}>
         <div className={styles.centralCol}>
-          <div className={styles.title}>Grep It</div>
+          <div className={styles.titleContainer}>
+            <div className={styles.title}>Grep It</div>
+            <div className={styles.animationContainer}>
+              <object type="image/svg+xml" data={animation} className={styles.animation}>svg-animation</object>
+            </div>
+          </div>
           <div style={borderStyle} className={styles.textInputContainer}>
             <input
               type="text"
@@ -160,7 +171,7 @@ class App extends Component {
               type="Submit"
               className={styles.button}
               style={{ backgroundColor: "var(--blue)" }}
-              value="Surprise Me !"
+              value="Surprise Me!"
               onClick={this.onShuffle}
             />
             <div
@@ -168,7 +179,21 @@ class App extends Component {
               style={{ backgroundColor: "var(--dark-blue)" }}
             />
           </div>
-          <div ref={this.resultsContainer} className={styles.resultsContainer} > {results} </div>
+          <div ref={this.tabContainer} id="tabContainer" className={styles.tabContainer}>
+            <div
+              onClick={() => this.setState({ tab: "so" })}
+              style={ this.state.tab === "so" ? { borderBottom: "2px solid var(--black)", color: "var(--black)", top: "1px" } : {} }
+            >
+              Stack Overflow
+            </div>
+            <div
+              onClick={() => this.setState({ tab: "gh" })}
+              style={ this.state.tab === "gh" ? { borderBottom: "2px solid var(--black)", color: "var(--black)", top: "1px" } : {} }
+            >
+              GitHub
+            </div>
+          </div>
+          <div className={styles.resultsContainer} > {results} </div>
         </div>
       </div>
     );
