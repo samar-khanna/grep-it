@@ -76,24 +76,65 @@ def cosine_search(query, query_code=None):
         points = np.array([a ** 2 + b ** 2 for a, b in zip(language_cosine_sim, code_cosine_sim)])
 
         relevant_indices = (-points).argsort()[:10].tolist()
-        print(relevant_indices)
+        #print(relevant_indices)
          #norm of scores length of all posts
-        relevant_indices_update = social_update(relevant_indices,points)
-        print(relevant_indices_update)
+        relevant_indices_social = social_update(relevant_indices,points)
+        #print(relevant_indices_social)
+        relevant_indices_merge_1=social_update_2(relevant_indices,relevant_indices_social, points)
+        #print(relevant_indices_merge_1)
+        relevant_indices_merge_2=social_update_2(relevant_indices_merge_1,relevant_indices_social, points)
+        #print(relevant_indices_merge_2)
     else:
         relevant_indices = (-language_cosine_sim).argsort()[:10].tolist()
-        relevant_indices_update = social_update(relevant_indices,language_cosine_sim)
-    return df.iloc[relevant_indices_update]
+        #print(relevant_indices)
+        relevant_indices_social = social_update(relevant_indices,language_cosine_sim)
+        #print(relevant_indices_social)
+        relevant_indices_merge_1=social_update_2(relevant_indices,relevant_indices_social, language_cosine_sim)
+        #print(relevant_indices_merge_1)
+        relevant_indices_merge_2=social_update_2(relevant_indices_merge_1,relevant_indices_social, language_cosine_sim)
+        #print(relevant_indices_merge_2)
+    return df.iloc[relevant_indices_merge_2]
 
 def social_update(relevant_indices, sim_scores):
     norm = np.linalg.norm(df['a_score']) #other fields: q_view_count, q_score,a_view_count
     sc_norm=df['a_score']/norm
     final_scores=np.zeros(10)
     for i, rel_ind in enumerate(relevant_indices):
-        final_scores[i]=(1/sc_norm[rel_ind])*sim_scores[rel_ind]
+        final_scores[i]=(sc_norm[rel_ind])*sim_scores[rel_ind]
     rel_dict = {k: v for k,v in enumerate(relevant_indices)}
     list_dict=sorted(rel_dict.items(), key= lambda x: final_scores[x[0]], reverse=True)
     return [v for (k,v) in list_dict]
+
+def social_update_2(relevant_indices, relevant_indices_update, sim_scores):
+    #given two ranking list, if sim scores are within a certain difference, rank according to social update rank list, otherwise rank according to first list
+    #call this function 2-3times to make multiple passes over rank so not just comparing adjacent ranks
+    #the "certain difference" is 1/(average sim score*slack/inv_weight), to give less weight to social, decrease inv_weight
+    #to decrease range of difference for ranking rearrangment, increase slack
+    slack=200
+    inv_weight=20
+    final=np.zeros(10)
+    i=0
+    while i<10:
+        if i!=9:
+            first=int(relevant_indices[i])
+            second=int(relevant_indices[i+1])
+            average=(sim_scores[first]+sim_scores[second])/2
+            difference=1/(average*slack/inv_weight)
+            if (sim_scores[first]-sim_scores[second]<difference):
+                if np.where(relevant_indices_update == relevant_indices[i+1]) < np.where(relevant_indices_update == relevant_indices[i]) :
+                    final[i]=relevant_indices[i+1]
+                    final[i+1]=relevant_indices[i]
+                    i+=2
+                else:
+                    final[i]=relevant_indices[i]
+                    i+=1
+            else:
+                final[i]=relevant_indices[i]
+                i+=1
+        else:
+            final[i]=relevant_indices[i]
+            i+=1
+    return final
 
 # run cosine sim on a user query
 # note: uses variables that were intially created in init_cosine.py
