@@ -45,7 +45,7 @@ def create_train_tokens(df, lang_tokenizer_file=None, code_tokenizer_file=None):
         concat_text = pd.concat([q_title, q_text, a_text])
         all_text = (text for idx, text in concat_text.iteritems())
         lang_tokenizer = train_language_tokenizer(
-            all_text, 'data/so_rust_qa_combined/lang_tokenizer.json'
+            all_text, 'data/so_rust_combined/lang_tokenizer.json'
         )
     else:
         print(f"Using pre-trained tokenizer from {lang_tokenizer_file}")
@@ -59,7 +59,7 @@ def create_train_tokens(df, lang_tokenizer_file=None, code_tokenizer_file=None):
         concat_code = pd.concat([q_code, a_code])
         all_code = (text for idx, text in concat_code.iteritems())
         code_tokenizer = train_code_tokenizer(
-            all_code, 'data/so_rust_qa_combined/code_tokenizer.json'
+            all_code, 'data/so_rust_combined/code_tokenizer.json'
         )
     else:
         print(f"Using pre-trained tokenizer from {code_tokenizer_file}")
@@ -91,7 +91,7 @@ if __name__ == "__main__":
             f.write(row + '\n')
 
     model = fasttext.train_unsupervised(args.train_text, bucket=20000, dim=400)
-    model.save_model('data/so_rust_qa_combined/so_skipgram.bin')
+    model.save_model('data/so_rust_combined/so_skipgram.bin')
 
     embedding = [model.get_sentence_vector(tok_line) for tok_line in space_sep_tokens]
-    np.save('data/so_rust_qa_combined/embedding.npy', np.array(embedding, dtype=np.float32))
+    np.save('data/so_rust_combined/embedding.npy', np.array(embedding, dtype=np.float32))
