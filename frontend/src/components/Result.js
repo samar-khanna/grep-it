@@ -33,8 +33,12 @@ class Result extends Component {
             })
             .then(res => {
                 res.json().then(data => {
+                    let range = this.props.node_range;
+                    let rangeArr = range.slice(1, -1).split(", ");
+                    let start = rangeArr[0];
+                    let end = rangeArr[1];
                     if (res.status === 200) {
-                        let answer = `<pre><code>${atob(data.content)}</code></pre>`
+                        let answer = `<pre><code>${atob(data.content).slice(start, end+1)}</code></pre>`
                         this.setState({ answer: answer })
                     }
                 })

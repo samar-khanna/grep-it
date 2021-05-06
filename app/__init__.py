@@ -56,7 +56,9 @@ def gh_df_to_list(df):
             "raw_file": f'https://raw.githubusercontent.com/{row["repo_name"]}/master/{row["file_path"]}',
             "stars": row["stars"],
             "blob_id": row["id"],
-            "type": "github"
+            "type": "github",
+            "node_range": row["node_range"],
+            "navigation_range": row["navigation_range"],
         })
     return res
 
