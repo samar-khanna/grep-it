@@ -9,7 +9,7 @@ var queries = [
     },
     {
         "text": "public functions in traits for a struct",
-        "code": "impl Foo for Bar {}"
+        "code": ""
     },
     {
         "text": "JSON deserialization and serialization of traits",
@@ -26,6 +26,10 @@ var queries = [
     {
         "text": "What is a rust compiler?",
         "code": ""
+    },
+    {
+        "text": "get items from future stream non blocking",
+        "code": "poll()"
     }
 ]
 export default queries;
