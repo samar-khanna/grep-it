@@ -4,6 +4,7 @@ import "./styles/general.css";
 import styles from "./styles/App.module.css";
 import Result from "./components/Result";
 import queries from "./constants/Queries";
+import animation from "./animation/grepit-crypto-jumper.svg";
 
 class App extends Component {
   constructor(props) {
@@ -130,7 +131,12 @@ class App extends Component {
     return (
       <div className={styles.container}>
         <div className={styles.centralCol}>
-          <div className={styles.title}>Grep It</div>
+          <div className={styles.titleContainer}>
+            <div className={styles.title}>Grep It</div>
+            <div className={styles.animationContainer}>
+              <object type="image/svg+xml" data={animation} className={styles.animation}>svg-animation</object>
+            </div>
+          </div>
           <div style={borderStyle} className={styles.textInputContainer}>
             <input
               type="text"

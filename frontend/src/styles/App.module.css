@@ -30,6 +30,20 @@
 	font-family: "Monda", sans-serif;
 }
 
+.animationContainer {
+	position: absolute;
+	top: -20px;
+	left: calc(50% + 60px);
+}
+
+.animation {
+	height: 100px;
+	width: auto;
+
+	position: relative;
+	top: 4px;
+}
+
 .textInputContainer {
 	height: 32px;
 	width: calc(100% - 12px);
