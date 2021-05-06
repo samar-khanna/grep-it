@@ -48,8 +48,8 @@ class App extends Component {
       },
       method: "POST",
       body: JSON.stringify({
-        query: this.state.text,
-        query_code: this.state.code,
+        query: queries[this.query_idx]["text"],
+        query_code: queries[this.query_idx]["code"],
         function: "cosine",
         count: 5,
         input_type: "both",
@@ -57,8 +57,8 @@ class App extends Component {
     })
       .then((response) => response.json())
       .then((results) => {
-        this.setState({ results: results });
-        this.resultsContainer.current.scrollIntoView();
+        this.setState({ soResults: results.so, ghResults: results.gh });
+        this.tabContainer.current.scrollIntoView(true);
       });
   };
 
@@ -120,6 +120,7 @@ class App extends Component {
     }
     let results = [];
     let toBeMapped = this.state.tab === "so" ? this.state.soResults : this.state.ghResults;
+    console.log(toBeMapped);
     if (toBeMapped !== undefined) {
       results = toBeMapped.map((item, index) => {
         return (
@@ -182,13 +183,13 @@ class App extends Component {
           <div ref={this.tabContainer} id="tabContainer" className={styles.tabContainer}>
             <div
               onClick={() => this.setState({ tab: "so" })}
-              style={ this.state.tab === "so" ? { borderBottom: "2px solid var(--black)", color: "var(--black)", top: "1px" } : {} }
+              style={this.state.tab === "so" ? { borderBottom: "2px solid var(--black)", color: "var(--black)", top: "1px" } : {}}
             >
               Stack Overflow
             </div>
             <div
               onClick={() => this.setState({ tab: "gh" })}
-              style={ this.state.tab === "gh" ? { borderBottom: "2px solid var(--black)", color: "var(--black)", top: "1px" } : {} }
+              style={this.state.tab === "gh" ? { borderBottom: "2px solid var(--black)", color: "var(--black)", top: "1px" } : {}}
             >
               GitHub
             </div>
