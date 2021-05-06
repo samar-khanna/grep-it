@@ -64,11 +64,11 @@ if __name__ == "__main__":
         for idx, row in space_sep_tokens.iteritems():
             f.write(row + '\n')
 
-    model = fasttext.train_unsupervised(args.train_text, bucket=20000, dim=200)
+    model = fasttext.train_unsupervised(args.train_text, bucket=20000, dim=128)
     model.save_model('data/gh_rust_code/gh_skipgram.bin')
 
     print("Getting TF-IDF matrix...")
-    model = fasttext.load_model('data/gh_rust_code/gh_skipgram.bin')
+    # model = fasttext.load_model('data/gh_rust_code/gh_skipgram.bin')
     vectorizer = TfidfVectorizer(analyzer=str.split)
     code_tfidf = vectorizer.fit_transform(space_sep_tokens).toarray()
     tok_to_id = {tok: i for i, tok in enumerate(vectorizer.get_feature_names())}
