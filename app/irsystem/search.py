@@ -49,31 +49,49 @@ def so_social_update(relevant_indices, sim_scores):
 
 def so_cosine_search(query, query_code=None, count=5):
     query_tokens = so_lang_tokenizer.encode(query).tokens
-    query_lang_vec = so_lang_model.get_sentence_vector(' '.join(query_tokens))
-    query_lang_vec = query_lang_vec.reshape(1, -1)
-
-    cosine_sim = cosine_similarity(query_lang_vec, so_lang_vecs).flatten()
 
     if query_code is not None:
         query_code_tokens = so_code_tokenizer.encode(query_code).tokens
-        query_code_vec = so_code_model.get_sentence_vector(' '.join(query_code_tokens))
-        query_code_vec = query_code_vec.reshape(1, -1)
 
-        code_cosine_sim = cosine_similarity(query_code_vec, so_code_vecs).flatten()
-
-        # create 2D space with language and code similarites and score
-        # based on distance from the origin prioritizes a high language/code score
-        # over the same score between language and code
-        # points = np.array([a ** 2 + b ** 2 for a, b in zip(language_cosine_sim, code_cosine_sim)])
-
-        cosine_sim = 0.5 * cosine_sim + 0.5 * code_cosine_sim
-
-        relevant_indices = (-cosine_sim).argsort()[:count].tolist()
+        query_vec = so_model.get_sentence_vector(' '.join(query_tokens + query_code_tokens))
     else:
-        relevant_indices = (-cosine_sim).argsort()[:count].tolist()
+        query_vec = so_model.get_sentence_vector(' '.join(query_tokens))
 
+    query_vec = query_vec.reshape(1, -1)
+    cosine_sim = cosine_similarity(query_vec, so_vecs).flatten()
+
+    relevant_indices = (-cosine_sim).argsort()[:count].tolist()
     relevant_indices = so_social_update(relevant_indices, cosine_sim)
     return so_metadata.iloc[relevant_indices]
+
+
+# def so_cosine_search(query, query_code=None, count=5):
+#     query_tokens = so_lang_tokenizer.encode(query).tokens
+#     query_lang_vec = so_lang_model.get_sentence_vector(' '.join(query_tokens))
+#     query_lang_vec = query_lang_vec.reshape(1, -1)
+#
+#     cosine_sim = cosine_similarity(query_lang_vec, so_lang_vecs).flatten()
+#
+#     if query_code is not None:
+#         query_code_tokens = so_code_tokenizer.encode(query_code).tokens
+#         query_code_vec = so_code_model.get_sentence_vector(' '.join(query_code_tokens))
+#         query_code_vec = query_code_vec.reshape(1, -1)
+#
+#         code_cosine_sim = cosine_similarity(query_code_vec, so_code_vecs).flatten()
+#
+#         # create 2D space with language and code similarites and score
+#         # based on distance from the origin prioritizes a high language/code score
+#         # over the same score between language and code
+#         # points = np.array([a ** 2 + b ** 2 for a, b in zip(language_cosine_sim, code_cosine_sim)])
+#
+#         cosine_sim = 0.5 * cosine_sim + 0.5 * code_cosine_sim
+#
+#         relevant_indices = (-cosine_sim).argsort()[:count].tolist()
+#     else:
+#         relevant_indices = (-cosine_sim).argsort()[:count].tolist()
+#
+#     relevant_indices = so_social_update(relevant_indices, cosine_sim)
+#     return so_metadata.iloc[relevant_indices]
 
 # # TODO: Decide whether to use combined or separate
 # def so_cosine_combined_search(query, query_code=None, count=5):
