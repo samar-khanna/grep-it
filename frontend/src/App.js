@@ -48,8 +48,8 @@ class App extends Component {
       },
       method: "POST",
       body: JSON.stringify({
-        query: queries[this.query_idx]["text"],
-        query_code: queries[this.query_idx]["code"],
+        query: this.state.text,
+        query_code: this.state.code,
         function: "cosine",
         count: 5,
         input_type: "both",
