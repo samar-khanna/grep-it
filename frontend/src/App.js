@@ -21,7 +21,8 @@ class App extends Component {
     this.tabContainer = React.createRef();
     this.textareaRef = React.createRef();
     this.cursorPosition = 0;
-    this.query_idx = Math.floor(Math.random() * queries.length);
+    // this.query_idx = Math.floor(Math.random() * queries.length);
+    this.query_idx = 0;
   }
 
   onTextInputBlur = (e) => {

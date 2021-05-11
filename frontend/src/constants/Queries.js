@@ -1,23 +1,27 @@
 var queries = [
     {
-        "text": "String to str",
-        "code": "String s = String::new(\"hello\"));"
-    },
-    {
-        "text": "How to use async method with tokio",
-        "code": "#[tokio::main]\nasync fn main() {\n}"
+        "text": "JSON deserialization and serialization of traits",
+        "code": ""
     },
     {
         "text": "public functions in traits for a struct",
         "code": ""
     },
     {
-        "text": "JSON deserialization and serialization of traits",
+        "text": "borrow checker vector mutable",
         "code": ""
     },
     {
-        "text": "cannot ctrl-c the code",
-        "code": ""
+        "text": "borrow checker vector mutable",
+        "code": ".last()\n.push()"
+    },
+    {
+        "text": "How to use async method with tokio",
+        "code": "#[tokio::main]\nasync fn main() {\n}"
+    },
+    {
+        "text": "String to str",
+        "code": "String s = String::new(\"hello\"));"
     },
     {
         "text": "Hello World in Rust",
@@ -27,9 +31,13 @@ var queries = [
         "text": "What is a rust compiler?",
         "code": ""
     },
-    {
-        "text": "get items from future stream non blocking",
-        "code": "poll()"
-    }
+    // {
+    //     "text": "cannot ctrl-c the code",
+    //     "code": ""
+    // },
+    // {
+    //     "text": "get items from future stream non blocking",
+    //     "code": "poll()"
+    // },
 ]
 export default queries;
